@@ -15,26 +15,34 @@ import kotlinx.android.synthetic.main.activity_categories.list_view_categories a
 class CategoriesActivity : AppCompatActivity() {
 
     private var allCategories: MutableList<String>? = null
-
     private var lv: ListView? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Paper.init(this)
 
+        defineLayout()
+        loadCategories()
+        addedInitialContent()
+
+    }
+
+    private fun defineLayout() {
         verticalLayout {
-            button  {
+            button {
                 text = "Nova Categoria"
                 onClick { createNewCategory() }
             }
             padding = dip(30)
             lv = listView {
-                onItemClick { adapterView, view, i, l -> toast(allCategories!!.get(i)) }
+                onItemClick { adapterView, view, i, l ->
+                    toast(allCategories!!.get(i))
+                }
             }
         }
+    }
 
-        loadCategories()
-
+    private fun addedInitialContent() {
         //Criei uma Lista que vai conter meus audios
         val itens = LinkedList<String>()
         itens.add("/123.3gp")
@@ -48,21 +56,13 @@ class CategoriesActivity : AppCompatActivity() {
 
         //Vou adicionar ao book minha categoria com seu nome (key)
         Paper.book().write("programacao", categories)
-
-        // HashMap itensRestored = Paper.book().read("programacao");
-//        loadCategories()
-
-//        buttonNewCategory.setOnClickListener { createNewCategory() }
     }
 
     private fun loadCategories(){
         allCategories = Paper.book().getAllKeys()
         val mAdapter =
                 ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allCategories)
-
         lv?.adapter = mAdapter
-//        listViewCategories.adapter =
-//                ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allCategories)
     }
 
     companion object {
@@ -83,26 +83,8 @@ class CategoriesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume();
-//        loadCategories();
     }
 
-
-//        @OnClick(R.id.button_new_category)
-//        public void createNewCategory(){
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            final EditText input = new EditText(this);
-//            builder.setView(input);
-//
-//            builder.setTitle("Criar nova Categoria");
-//            builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    Paper.book().write(input.getText().toString(), new HashMap<String, List<String>>());
-//                    loadCategories();
-//                }
-//            });
-//            builder.show();
-//        }
 
     //    @OnItemClick(R.id.list_view_categories)
     //    public void clickCategory(int position){
@@ -111,10 +93,5 @@ class CategoriesActivity : AppCompatActivity() {
     //        startActivity(intentToItens);
     //    }
 
-    //    @Override
-    //    protected void onResume() {
-    //        super.onResume();
-    //        loadCategories();
-    //    }
 
 }
