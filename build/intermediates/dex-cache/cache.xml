@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/500861650cb33b085c0c14452dab9bb07bb338ac/output/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3af8cc51ef7088e56f132780da8c0bd858b6a6ad">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_b139dc5e91d12c8e473c610428ac174764d2d686.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/500861650cb33b085c0c14452dab9bb07bb338ac/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="51eba4a4dd73044f90a9d58dd7ca34adbebfcf4e">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_23b9a86ee826d52691b29370c9b9fa5717647b25.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/e3fa948dd734707b4b1ea5783c2a6ec3ac414cbc/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="25cd6ea8b3f45e38bfbd4a8c14059f95cf441efc">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_55853cf137da47e676b0dd891b2b085f8f97baa9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/ab99b18a3d9e52afcab46612fa100d7e51fa1972/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="6a1479afe9f1b3645e1cd9a87318976893472818">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_107a8dc07c65b22753ac560e3ef9c6460281dad4.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/ab99b18a3d9e52afcab46612fa100d7e51fa1972/output/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="f83b00041ecfba705603fec40363416c7de69719">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_b36a2b00e9ebc96538cb22a74730ab65b2b84996.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/de.javakaffee/kryo-serializers/0.40/562cb61898302da4e8d3fd141c821edb1bc6b36d/kryo-serializers-0.40.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="562cb61898302da4e8d3fd141c821edb1bc6b36d">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/kryo-serializers-0.40_b7fef5317801d617820de3abb9aa15e1be0cadf8.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android-studio/gradle/m2repository/org/ow2/asm/asm/5.0.4/asm-5.0.4.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="0da08b8cce7bbf903602a25a3a163ae252435795">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/asm-5.0.4_1a7ecb0857d44871b54ccb4b23eeb65fcd4a8d26.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/org.jetbrains.anko/anko-support-v4/0.9.1/69115b0178be8d56c59a2f367c84d9763c94f46c/anko-support-v4-0.9.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="69115b0178be8d56c59a2f367c84d9763c94f46c">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/anko-support-v4-0.9.1_f7d4e5108618429ca3adcbb77340370ff62e9f36.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/7b3a45264aedc8e8cc49baf19f166a3809b1dac7/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="7f2f348b830f292429db987f74ba3e67c6752322">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_997ad95a8b2831e5e6b7e0b73d13e10b7661a8d1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jre7/1.1.3-2/3fe54c7558c903868351ac79b792d152bca958f2/kotlin-stdlib-jre7-1.1.3-2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3fe54c7558c903868351ac79b792d152bca958f2">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/kotlin-stdlib-jre7-1.1.3-2_037a3fbd99983007064eb408cdde47dadbd2e3db.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/99216a35ae8d36def098a3beab8b6e96ff37582d/output/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="c5b7145fb34779b6639147b8f2f8dd77c0db771b">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_f59818adde2efdedaaf47754dc3bb4f306ee278d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="919f0dfe192fb4e063e7dacadee7f8bb9a2672a9">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/annotations-13.0_81c9a76456b691307afeb675ab02072bbb074bb6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/25.0.1/support-annotations-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="a09194311f8f89c3e6db09d79f50897a889d615e">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/support-annotations-25.0.1_0aef94314cc93a18e3cfef0d67fab553e0b8b9d5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/212a8206926d97d7b5272f2b00f5974ba9114180/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="26c6eef571592c91f29e56fda0bac73321de0c92">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_3b7528acc126759e107c50923bb93884be8ce99b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android-studio/gradle/m2repository/com/android/databinding/baseLibrary/2.3.3/baseLibrary-2.3.3.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="eb3399988a52099b0127e27fb5bed666eca86ace">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/baseLibrary-2.3.3_ec754ee59dd3494579fd036046192c7aa80b7f3e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/b32aca69ed8723028249c4744b569d54daaa8370/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="772bed2d992b67b9d0327f766cc95cd63031dcd3">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_0a921681e20df1cba106c35e2f0d297f152db6b4.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/2.3/980992bd422b477b140240304416a755dd56a844/objenesis-2.3.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="980992bd422b477b140240304416a755dd56a844">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/objenesis-2.3_79699e1e15a47b94625b355b4075e763136c91ee.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/d95138306337bdb7e205bf5dfaae2f60b5bd715f/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="f7ac4b327fdb9e2ee386f5adc46164927658de4b">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_af673922b48361d4dc121965dd7c56b901938642.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/org.jetbrains.anko/anko-appcompat-v7/0.9.1/a77ea5398546737ffc597e5c1c0b21c63beaf60/anko-appcompat-v7-0.9.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="0a77ea5398546737ffc597e5c1c0b21c63beaf60">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/anko-appcompat-v7-0.9.1_458cf63e6c234c90ff14b0a3d951f2d35c7b07fc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/com.esotericsoftware/minlog/1.3.0/ff07b5f1b01d2f92bb00a337f9a94873712f0827/minlog-1.3.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="ff07b5f1b01d2f92bb00a337f9a94873712f0827">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/minlog-1.3.0_f75f112aaa39b0574dd73973a11e6694bdcfc170.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/com.esotericsoftware/reflectasm/1.11.3/8b102eed2f12412b254946811111ea48bc03a266/reflectasm-1.11.3.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="8b102eed2f12412b254946811111ea48bc03a266">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/reflectasm-1.11.3_6d06c8381f620b32e4b68734803efd276a580d82.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/1822cf3a53bb9fd34f967b2101dfa6018f0182a7/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_5f10d3f6612215296b10c79fe4f66e8e219a1e4c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.1.3-2/9b44c139a4ec57031e0c84ba0e49ba16df6d801c/kotlin-stdlib-1.1.3-2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="9b44c139a4ec57031e0c84ba0e49ba16df6d801c">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/kotlin-stdlib-1.1.3-2_a334b78e7b831b620342e1b2034140326d247e7f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/dd19c2b1663cecf0bc170fde90b59862dac75642/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="c1b6ab157e8e12cb08b9ee82bb5e3c5d22632eb3">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_c4782c98f8ec6f90dcd1a13f3478256e648219d0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/org.jetbrains.anko/anko-common/0.9.1/94848205587db2dcb3ad37420531a106b2f52385/anko-common-0.9.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="94848205587db2dcb3ad37420531a106b2f52385">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/anko-common-0.9.1_560ad57ba0ef90e7e81569f13ce4b7f4e175e58e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/bedee4cdcbf18096ce50d119b00ab71aa594c8d4/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="bc7e99e8d0fc279a05aa91378530f467ad62d443">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_c5e8236644cafbadd9bdce265152e4a46d05f9d0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/org.jetbrains.anko/anko-sdk15/0.9.1/cd75e456277ed865a5ab936e011e8df6cc935c0d/anko-sdk15-0.9.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="cd75e456277ed865a5ab936e011e8df6cc935c0d">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/anko-sdk15-0.9.1_f1d464a8db3201d1f2cbb545d155941ab24b1fad.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/bedee4cdcbf18096ce50d119b00ab71aa594c8d4/output/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e5343c9d19cb19ff55f6b268c7f3fe8c9d224f6f">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_795613dad99cd20de68344a0c4d1808c0c0245c6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/99216a35ae8d36def098a3beab8b6e96ff37582d/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="00d4c8eebf2b681073c72a26bd0849549e51c7cb">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_d9fe95fee0e51f8e5acb2e05ea7297420c9c69d1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/11b042ec46f57267320713ef7c4a5dcd9e3a85c5/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3b236883e0df6002cabb01ce57d00a5b1e5de610">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_71612273a47d749b0513789cd439096e94c2cf37.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/59d596343149bc6506c526dd871f178ed83a4788/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="297d4bcf6ed4e747a1bf7d0d094a2d911a8d3a8e">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_92c605b07572a1074270c9e94d22c7ee7bd36443.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/1ccdc8e19a753f04d839b04ed0b202c53416b0e9/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="68956f5ba1517b7a3d513ba540548e257741cbae">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_4c4a3fe3f99e0859ea094b76406b886193b48ae9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.gradle/caches/modules-2/files-2.1/com.esotericsoftware/kryo/4.0.0/9f5c64c1315ec79bee0f56bb88e4ae94b65048ce/kryo-4.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="9f5c64c1315ec79bee0f56bb88e4ae94b65048ce">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/kryo-4.0.0_76dd28f6ee9c92c8da113862c45ef3bf36da2514.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/212a8206926d97d7b5272f2b00f5974ba9114180/output/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="c0bd6ffb002a85b5e7cad29f8558d1cc59539679">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_d67bb26809258b90e3be1a9d01abbd8c9c9e73f8.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/sergio/.android/build-cache/1adee1cd2ff250dde1ef2d8a1f5d6fb75737d5d8/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="b24e1c688744078e1fa833ffadf696794761bbe5">
+        <dex dex="/home/sergio/AndroidStudioProjects/Nota-agil/app/build/intermediates/pre-dexed/debug/classes_a30d1ac95e0eebb8795145b7bb9990edc221bdb9.jar" />
+    </item>
+
+</items>
