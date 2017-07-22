@@ -1,52 +1,39 @@
 package com.example.sergio.nota_agil.activity
 
-import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.ListAdapter
 import android.widget.ListView
-import kotlinx.android.synthetic.main.activity_categories.list_view_categories as listViewCategories
-import kotlinx.android.synthetic.main.activity_categories.button_new_category as buttonNewCategory
-
-import com.example.sergio.nota_agil.R
-
-import java.util.HashMap
-import java.util.LinkedList
 import io.paperdb.Paper
 import org.jetbrains.anko.*
+import java.util.*
+import kotlinx.android.synthetic.main.activity_categories.button_new_category as buttonNewCategory
+import kotlinx.android.synthetic.main.activity_categories.list_view_categories as listViewCategories
 
 class CategoriesActivity : AppCompatActivity() {
+
+    private var allCategories: MutableList<String>? = null
+
+    private var lv: ListView? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Paper.init(this)
-//        setContentView(R.layout.activity_categories)
-
-        val allCategories = Paper.book().getAllKeys();
-        val mAdapter =
-                ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allCategories)
 
         verticalLayout {
-            padding = dip(30)
-            listView {
-                adapter = mAdapter as ListAdapter?
-                onItemClick { adapterView, view, i, l -> toast(allCategories.get(i)) }
-            }
-            button {
+            button  {
                 text = "Nova Categoria"
-                onClick { view -> alert("Criando categoria") {
-                    title("Nova Categoria")
-                    val categoryName = editText()
-                    yesButton { Paper.book().write(categoryName.toString(), HashMap<String, List<String>>()) }
-                    noButton { toast("Noo!!!")}
-                }.show()}
+                onClick { createNewCategory() }
+            }
+            padding = dip(30)
+            lv = listView {
+                onItemClick { adapterView, view, i, l -> toast(allCategories!!.get(i)) }
             }
         }
 
+        loadCategories()
 
         //Criei uma Lista que vai conter meus audios
         val itens = LinkedList<String>()
@@ -68,11 +55,15 @@ class CategoriesActivity : AppCompatActivity() {
 //        buttonNewCategory.setOnClickListener { createNewCategory() }
     }
 
-//    private fun loadCategories(){
-//        val allCategories = Paper.book().getAllKeys()
+    private fun loadCategories(){
+        allCategories = Paper.book().getAllKeys()
+        val mAdapter =
+                ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allCategories)
+
+        lv?.adapter = mAdapter
 //        listViewCategories.adapter =
 //                ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allCategories)
-//    }
+    }
 
     companion object {
         private val TAG = "CategoriesActivity"
@@ -85,7 +76,7 @@ class CategoriesActivity : AppCompatActivity() {
                 .setTitle("Criar Nova Categoria")
                 .setPositiveButton("OK") {
                     _, _ -> Paper.book().write(input.text.toString(), HashMap<String, List<String>>())
-//                    loadCategories()
+                    loadCategories()
                 }
                 .show();
     }
