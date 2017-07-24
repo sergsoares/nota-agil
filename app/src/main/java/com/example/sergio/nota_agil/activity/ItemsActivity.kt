@@ -2,11 +2,14 @@ package com.example.sergio.nota_agil.activity
 
 import android.R
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ListView
 import io.paperdb.Paper
 import org.jetbrains.anko.*
+import java.util.*
 import kotlinx.android.synthetic.main.activity_categories.button_new_category as buttonNewCategory
 import kotlinx.android.synthetic.main.activity_categories.list_view_categories as listViewCategories
 
@@ -24,6 +27,14 @@ class ItemsActivity : AppCompatActivity() {
         text = intent.getStringExtra("category")
         textSize = 42f
       }
+
+      button {
+        text = "Novo item"
+        onClick { createNewItem() }
+      }
+
+      padding = dip(30)
+
       itensListView = listView {
         onItemClick { adapterView, view, i, l ->
 
@@ -31,6 +42,17 @@ class ItemsActivity : AppCompatActivity() {
         }
       }
     }
+  }
+
+  private fun createNewItem() {
+    val input = EditText(this)
+    AlertDialog.Builder(this)
+        .setView(input)
+        .setTitle("Criar novo Item")
+        .setPositiveButton("OK") { _, _ ->
+          Paper.book(intent.getStringExtra("category")).write(input.text.toString(), ArrayList<String>())
+          reloadAdapter()
+        }.show();
   }
 
   private fun reloadAdapter() {
