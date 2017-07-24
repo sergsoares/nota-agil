@@ -26,23 +26,23 @@ class ItemsActivity : AppCompatActivity() {
       }
       itensListView = listView {
         onItemClick { adapterView, view, i, l ->
-          startActivity<ItemActivity>("item" to itens!!)
+
+          startActivity<ItemActivity>("item" to Paper.book(intent.getStringExtra("category")).read(itens!!.get(i)))
         }
       }
     }
   }
 
-
-
   private fun reloadAdapter() {
-    itens = Paper.book().read<HashMap<String, List<String>>>(intent.getStringExtra("category"))
-    val adapter = ArrayAdapter<String>(this, R.layout.simple_list_item_1, itens!!.keys.toList())
+    itens = Paper.book(intent.getStringExtra("category")).allKeys
+    val adapter = ArrayAdapter<String>(this, R.layout.simple_list_item_1, itens)
     itensListView!!.adapter = adapter
   }
 
   companion object {
     private val TAG = "ItemsActivity"
-    private var itens: HashMap<String, List<String>>? = null
+//    private var itens: HashMap<String, List<String>>? = null
+    private var  itens: MutableList<String>? = null
     private var itensListView: ListView? = null
   }
 

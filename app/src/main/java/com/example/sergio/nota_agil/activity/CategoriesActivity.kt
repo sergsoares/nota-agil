@@ -25,6 +25,7 @@ class CategoriesActivity : AppCompatActivity() {
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Paper.init(this)
+    addedInitialContent()
     defineLayout()
     reloadAdapter()
   }
@@ -40,7 +41,7 @@ class CategoriesActivity : AppCompatActivity() {
 
       categoriesListView = listView {
         onItemClick { adapterView, view, i, l ->
-          toast(Paper.book().allKeys[i])
+//          toast(Paper.book().allKeys[i])
           startActivity<ItemsActivity>("category" to Paper.book().allKeys[i])
         }
       }
@@ -49,20 +50,19 @@ class CategoriesActivity : AppCompatActivity() {
 
   private fun addedInitialContent() {
     //Criei uma Lista que vai conter meus audios
-    val itens = LinkedList<String>()
+    val itens = ArrayList<String>()
     itens.add("/123.3gp")
     itens.add("/321.3gp")
 
     //Criar minha categoria que vai ser representada por Hash
-    val categories = HashMap<String, List<String>>()
+//    val categories = HashMap<String, List<String>>()
 
     //Vou anexar nessa categoria uma lista de itens com o nome a minha categoria
-    categories.put("Orientada a objetos", itens)
-    categories.put("SOLID", itens)
-    categories.put("Teste", itens)
-
     //Vou adicionar ao book minha categoria com seu nome (key)
-    Paper.book().write("programacao", categories)
+    Paper.book("programacao").write("Orientada a objetos", itens)
+    Paper.book("programacao").write("SOLID", itens)
+    Paper.book("programacao").write("Teste", itens)
+    Paper.book().write("programacao", "programacao")
   }
 
   private fun reloadAdapter(){
@@ -77,7 +77,11 @@ class CategoriesActivity : AppCompatActivity() {
         .setView(input)
         .setTitle("Criar Nova Categoria")
         .setPositiveButton("OK") { _, _ ->
-          Paper.book().write(input.text.toString(), HashMap<String, List<String>>())
+          Paper.book(input.text.toString())
+
+          //book default save others book Names
+          Paper.book().write(input.text.toString(), input.text.toString())
+//          Paper.book("programacao").write(input.text.toString(), ArrayList<String>())
           reloadAdapter()
         }.show();
   }
