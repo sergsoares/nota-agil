@@ -37,8 +37,9 @@ class ItemsActivity : AppCompatActivity() {
 
       itensListView = listView {
         onItemClick { adapterView, view, i, l ->
-
-          startActivity<ItemActivity>("item" to Paper.book(intent.getStringExtra("category")).read(itens!!.get(i)))
+          startActivity<ItemActivity>("category" to intent.getStringExtra("category")
+                                      , "item" to itens!!.get(i))
+//                                     ,"item" to Paper.book(intent.getStringExtra("category")).read)
         }
       }
     }
