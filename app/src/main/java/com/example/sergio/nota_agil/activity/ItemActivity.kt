@@ -24,7 +24,10 @@ class ItemActivity : AppCompatActivity() {
   lateinit var ITEM: String
 //  private var mContext: AppCompatActivity? = null
   private val TAG = "ItemActivity"
-
+  private var filesListView: ListView? = null
+  private var mMediaRecorder: MediaRecorder? = null
+  private var mMediaPlayer: MediaPlayer? = null
+  private var mFileName: String? = null
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -36,11 +39,6 @@ class ItemActivity : AppCompatActivity() {
     defineLayout()
     reloadAdapter()
   }
-
-  private var filesListView: ListView? = null
-
-  private var  mMediaRecorder: MediaRecorder? = null
-  private var mMediaPlayer: MediaPlayer? = null
 
   private fun defineLayout() {
     verticalLayout {
@@ -54,12 +52,12 @@ class ItemActivity : AppCompatActivity() {
               mMediaRecorder!!.setAudioSource(MediaRecorder.AudioSource.MIC)
               mMediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
               mMediaRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-              val mFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/default.3gp";
+              mFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + (System.currentTimeMillis() / 1000).toString() + ".3gp";
               mMediaRecorder!!.setOutputFile(mFileName)
               try {
                 Log.e(TAG, "Start recording")
                 mMediaRecorder!!.prepare()
-                  mMediaRecorder!!.start()
+                mMediaRecorder!!.start()
               } catch (e: IOException) {
                 Log.e(TAG, "prepare() failed")
               }
@@ -80,34 +78,38 @@ class ItemActivity : AppCompatActivity() {
         text = "Parar Gravacao"
         onClick {
           mMediaRecorder!!.stop()
+          item = if (item == null) ArrayList<String>() else item!!
+          item!!.add(mFileName!!)
+          Paper.book(CATEGORY).write(ITEM, item)
+          reloadAdapter()
         }
       }
 
-      button {
-        text = "Tocar Audio"
-        onClick {
-          try {
-            if (mMediaPlayer == null) {
-              mMediaPlayer = MediaPlayer()
-              mMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-              val mFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/default.3gp";
-              mMediaPlayer!!.setDataSource(mFileName)
-              mMediaPlayer!!.prepare()
-            }
-            mMediaPlayer!!.start()
-
-//            if (mMediaPlayer.isPlaying()) {
-//              mMediaPlayer.pause()
-//            } else {
-//
+//      button {
+//        text = "Tocar Audio"
+//        onClick {
+//          try {
+//            if (mMediaPlayer == null) {
+//              mMediaPlayer = MediaPlayer()
+//              mMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+////              val mFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/default.3gp";
+//              mMediaPlayer!!.setDataSource(mFileName)
+//              mMediaPlayer!!.prepare()
 //            }
-
-          } catch (e: IOException) {
-            e.printStackTrace()
-          }
-
-        }
-      }
+//            mMediaPlayer!!.start()
+//
+////            if (mMediaPlayer.isPlaying()) {
+////              mMediaPlayer.pause()
+////            } else {
+////
+////            }
+//
+//          } catch (e: IOException) {
+//            e.printStackTrace()
+//          }
+//
+//        }
+//      }
       textView {
         text = ITEM
         textSize = 42f
@@ -115,7 +117,17 @@ class ItemActivity : AppCompatActivity() {
       filesListView = listView {
         onItemClick { adapterView, view, i, l ->
           //          startActivity<ItemActivity>("item" to ItemsActivity.itens!!)
-
+          try {
+              toast(item!![i] )
+              mMediaPlayer = MediaPlayer()
+              mMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+//              val mFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + item!![i];
+              mMediaPlayer!!.setDataSource(mFileName)
+              mMediaPlayer!!.prepare()
+            mMediaPlayer!!.start()
+          } catch (e: IOException) {
+            e.printStackTrace()
+          }
         }
       }
     }
