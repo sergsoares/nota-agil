@@ -5,6 +5,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.ListAdapter
 import android.widget.ListView
 import io.paperdb.Paper
 import org.jetbrains.anko.*
@@ -42,7 +43,8 @@ class CategoriesActivity : AppCompatActivity() {
       categoriesListView = listView {
         onItemClick { adapterView, view, i, l ->
 //          toast(Paper.book().allKeys[i])
-          startActivity<ItemsActivity>("category" to Paper.book().allKeys[i])
+          startActivity<ItemsActivity>("category" to Paper.book().allKeys[i]
+          )
         }
       }
     }
@@ -67,7 +69,7 @@ class CategoriesActivity : AppCompatActivity() {
 
   private fun reloadAdapter(){
     val adapterCategories = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Paper.book().allKeys)
-    categoriesListView!!.adapter = adapterCategories
+    categoriesListView!!.adapter = adapterCategories as ListAdapter?
   }
 
 
