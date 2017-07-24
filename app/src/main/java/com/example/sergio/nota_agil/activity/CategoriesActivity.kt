@@ -37,6 +37,7 @@ class CategoriesActivity : AppCompatActivity() {
             lv = listView {
                 onItemClick { adapterView, view, i, l ->
                     toast(allCategories!!.get(i))
+                    startActivity<ItensActivity>("category" to allCategories!!.get(i))
                 }
             }
         }
@@ -52,6 +53,8 @@ class CategoriesActivity : AppCompatActivity() {
         val categories = HashMap<String, List<String>>()
 
         //Vou anexar nessa categoria uma lista de itens com o nome a minha categoria
+        categories.put("Orientada a objetos", itens)
+        categories.put("Orientada a objetos", itens)
         categories.put("Orientada a objetos", itens)
 
         //Vou adicionar ao book minha categoria com seu nome (key)

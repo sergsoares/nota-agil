@@ -25,6 +25,7 @@ class ItensActivity : AppCompatActivity() {
         verticalLayout{
             textView{
                 text = category
+                textSize = 42f
             }
             listView {
                 adapter = mAdapter
