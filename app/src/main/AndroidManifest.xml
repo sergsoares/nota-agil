@@ -17,6 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.ItensActivity"></activity>
+        <activity android:name=".activity.ItemActivity"></activity>
+
     </application>
 
 </manifest>
