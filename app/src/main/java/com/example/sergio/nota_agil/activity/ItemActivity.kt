@@ -12,7 +12,9 @@ import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import io.paperdb.Paper
 import org.jetbrains.anko.*
@@ -20,13 +22,19 @@ import java.io.IOException
 
 class ItemActivity : AppCompatActivity() {
 
-  lateinit var CATEGORY: String
-  lateinit var ITEM: String
+  private var CATEGORY: String = ""
+  private var ITEM: String = ""
+  //  lateinit var ITEM: String
   private val TAG = "ItemActivity"
   private var filesListView: ListView? = null
-  private var mMediaRecorder: MediaRecorder? = null
-  private var mMediaPlayer: MediaPlayer? = null
-  private var mFileName: String? = null
+//  private var mMediaPlayer: MediaPlayer? = null
+  private val mFileName: StringBuilder = StringBuilder()
+
+//  companion object {
+    private var mMediaRecorder: MediaRecorder? = null
+    private var mMediaPlayer: MediaPlayer? = null
+//  }
+
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -40,45 +48,27 @@ class ItemActivity : AppCompatActivity() {
     toast(ITEM)
   }
 
+  private var recordButton: Button? = null
+  private var stopRecordButton: Button? = null
+
   private fun defineLayout() {
     verticalLayout {
-      button {
+      recordButton = button {
         text = "Gravar Audio"
         onClick {
-          if (isStoragePermissionGranted() && isRecordPermissionGranted()) {
-            val pmanager = this.context.getPackageManager()
-            if (pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
-              mMediaRecorder = MediaRecorder()
-              mMediaRecorder!!.setAudioSource(MediaRecorder.AudioSource.MIC)
-              mMediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-              mMediaRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-              mFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + (System.currentTimeMillis() / 1000).toString() + ".3gp";
-              mMediaRecorder!!.setOutputFile(mFileName)
-              try {
-                Log.e(TAG, "Start recording")
-                mMediaRecorder!!.prepare()
-                mMediaRecorder!!.start()
-              } catch (e: IOException) {
-                Log.e(TAG, "prepare() failed")
-              }
-
-              Log.e(TAG, "File is in " )
-            }
-          }
-          reloadAdapter()
+          startRecord()
+          recordButton?.visibility = View.GONE
+          stopRecordButton?.visibility = View.VISIBLE
         }
       }
 
-      button {
+      stopRecordButton = button {
         text = "Parar Gravacao"
+        visibility = View.GONE
         onClick {
-          mMediaRecorder!!.stop()
-          fetchItem()
-//          item = if (item == null) ArrayList<String>() else item!!
-          val itemTemp = fetchItem()
-          itemTemp.add(mFileName!!)
-          Paper.book(CATEGORY).write(ITEM, itemTemp)
-          reloadAdapter()
+          stopRecord()
+          recordButton?.visibility = View.VISIBLE
+          stopRecordButton?.visibility = View.GONE
         }
       }
 
@@ -86,21 +76,62 @@ class ItemActivity : AppCompatActivity() {
         text = ITEM
         textSize = 42f
       }
+
       filesListView = listView {
         onItemClick { adapterView, view, i, l ->
-          try {
-//              toast(item!![i] )
-              mMediaPlayer = MediaPlayer()
-              mMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-//              val mFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + item!![i];
-              mMediaPlayer!!.setDataSource(mFileName)
-              mMediaPlayer!!.prepare()
-            mMediaPlayer!!.start()
-          } catch (e: IOException) {
-            e.printStackTrace()
-          }
+          executeMedia(fetchItem()[i])
         }
       }
+    }
+  }
+
+  private fun Button.startRecord() {
+    if (isStoragePermissionGranted() && isRecordPermissionGranted()) {
+      val pmanager = this.context.getPackageManager()
+      if (pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
+        mMediaRecorder = MediaRecorder()
+        mMediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
+        mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+        mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+        //TODO: Clean mFileName to dont concat all new media recorded
+        mFileName.setLength(0)
+        mFileName.append(getTimestamp())
+        mMediaRecorder?.setOutputFile(getCompletePath(mFileName.toString()))
+        try {
+          Log.e(TAG, "Start recording")
+          mMediaRecorder?.prepare()
+          mMediaRecorder?.start()
+        } catch (e: IOException) {
+          Log.e(TAG, "prepare() failed")
+        }
+
+        Log.e(TAG, "File is in ")
+      }
+    }
+    reloadAdapter()
+  }
+
+  private fun getCompletePath(itemName: String) = fecthAbsolutePath() + "/" + itemName + ".3gp"
+
+
+  private fun stopRecord() {
+    mMediaRecorder?.stop()
+    val itemTemp = fetchItem()
+    itemTemp.add(mFileName.toString())
+    Paper.book(CATEGORY).write(ITEM, itemTemp)
+    reloadAdapter()
+  }
+
+  private fun executeMedia(itemName: String) {
+    try {
+      mMediaPlayer = MediaPlayer()
+      mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+      //TODO: getCorrectPathToFile
+      mMediaPlayer?.setDataSource(getCompletePath(itemName))
+      mMediaPlayer?.prepare()
+      mMediaPlayer?.start()
+    } catch (e: IOException) {
+      e.printStackTrace()
     }
   }
 
@@ -152,6 +183,10 @@ class ItemActivity : AppCompatActivity() {
       return true
     }
   }
+
+  private fun fecthAbsolutePath() = Environment.getExternalStorageDirectory().getAbsolutePath()
+
+  private fun getTimestamp() = (System.currentTimeMillis() / 1000).toString()
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)

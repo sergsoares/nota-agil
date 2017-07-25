@@ -17,6 +17,7 @@ class ItemsActivity : AppCompatActivity() {
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    Paper.init(this)
     defineLayout()
     reloadAdapter()
   }
