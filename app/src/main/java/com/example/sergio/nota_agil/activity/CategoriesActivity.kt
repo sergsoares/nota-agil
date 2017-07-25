@@ -43,8 +43,7 @@ class CategoriesActivity : AppCompatActivity() {
       categoriesListView = listView {
         onItemClick { adapterView, view, i, l ->
 //          toast(Paper.book().allKeys[i])
-          startActivity<ItemsActivity>("category" to Paper.book().allKeys[i]
-          )
+          startActivity<ItemsActivity>("category" to Paper.book().allKeys[i])
         }
       }
     }

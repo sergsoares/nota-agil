@@ -78,9 +78,11 @@ class ItemActivity : AppCompatActivity() {
         text = "Parar Gravacao"
         onClick {
           mMediaRecorder!!.stop()
-          item = if (item == null) ArrayList<String>() else item!!
-          item!!.add(mFileName!!)
-          Paper.book(CATEGORY).write(ITEM, item)
+          fetchItem()
+//          item = if (item == null) ArrayList<String>() else item!!
+          val itemTemp = fetchItem()
+          itemTemp.add(mFileName!!)
+          Paper.book(CATEGORY).write(ITEM, itemTemp)
           reloadAdapter()
         }
       }
@@ -118,7 +120,7 @@ class ItemActivity : AppCompatActivity() {
         onItemClick { adapterView, view, i, l ->
           //          startActivity<ItemActivity>("item" to ItemsActivity.itens!!)
           try {
-              toast(item!![i] )
+//              toast(item!![i] )
               mMediaPlayer = MediaPlayer()
               mMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
 //              val mFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + item!![i];
@@ -133,12 +135,13 @@ class ItemActivity : AppCompatActivity() {
     }
   }
 
-  private var item: ArrayList<String>? = null
+//  private var item: ArrayList<String>? = null
+  private fun fetchItem(): ArrayList<String> = Paper.book(CATEGORY).read(ITEM)
 
   private fun reloadAdapter() {
-      item = Paper.book(CATEGORY).read(ITEM)
+//      item = Paper.book(CATEGORY).read(ITEM)
 //      item = intent.getSerializableExtra("item") as ArrayList<String>
-      val adapter = ArrayAdapter<String>(this, R.layout.simple_list_item_1, item)
+      val adapter = ArrayAdapter<String>(this, R.layout.simple_list_item_1, fetchItem())
       filesListView!!.adapter = adapter
   }
 

@@ -25,7 +25,7 @@ class ItemsActivity : AppCompatActivity() {
     verticalLayout {
       textView {
         text = intent.getStringExtra("category")
-        textSize = 42f
+        textSize = 30f
       }
 
       button {
