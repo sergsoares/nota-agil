@@ -26,7 +26,7 @@ class CategoriesActivity : AppCompatActivity() {
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Paper.init(this)
-    addedInitialContent()
+//    addedInitialContent()
     defineLayout()
     reloadAdapter()
   }

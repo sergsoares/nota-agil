@@ -38,8 +38,7 @@ class ItemsActivity : AppCompatActivity() {
       itensListView = listView {
         onItemClick { adapterView, view, i, l ->
           startActivity<ItemActivity>("category" to intent.getStringExtra("category")
-                                      , "item" to itens!!.get(i))
-//                                     ,"item" to Paper.book(intent.getStringExtra("category")).read)
+                                      , "item" to fetchItems().get(i))
         }
       }
     }
@@ -57,15 +56,14 @@ class ItemsActivity : AppCompatActivity() {
   }
 
   private fun reloadAdapter() {
-    itens = Paper.book(intent.getStringExtra("category")).allKeys
-    val adapter = ArrayAdapter<String>(this, R.layout.simple_list_item_1, itens)
+    val adapter = ArrayAdapter<String>(this, R.layout.simple_list_item_1, fetchItems())
     itensListView!!.adapter = adapter
   }
 
+  private fun fetchItems() = Paper.book(intent.getStringExtra("category")).allKeys
+
   companion object {
     private val TAG = "ItemsActivity"
-//    private var itens: HashMap<String, List<String>>? = null
-    private var  itens: MutableList<String>? = null
     private var itensListView: ListView? = null
   }
 
