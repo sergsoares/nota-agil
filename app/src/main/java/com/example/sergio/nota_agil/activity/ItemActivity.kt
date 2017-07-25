@@ -22,7 +22,6 @@ class ItemActivity : AppCompatActivity() {
 
   lateinit var CATEGORY: String
   lateinit var ITEM: String
-//  private var mContext: AppCompatActivity? = null
   private val TAG = "ItemActivity"
   private var filesListView: ListView? = null
   private var mMediaRecorder: MediaRecorder? = null
@@ -33,11 +32,12 @@ class ItemActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     CATEGORY = intent.getStringExtra("category")
     ITEM = intent.getStringExtra("item")
-//    mContext = this
     isRecordPermissionGranted()
     isStoragePermissionGranted()
     defineLayout()
     reloadAdapter()
+    toast(CATEGORY)
+    toast(ITEM)
   }
 
   private fun defineLayout() {
@@ -62,14 +62,9 @@ class ItemActivity : AppCompatActivity() {
                 Log.e(TAG, "prepare() failed")
               }
 
-//              Log.e(LOG_TAG, "File is in " + )
-//              return true
+              Log.e(TAG, "File is in " )
             }
           }
-//          val itens = if (item == null) ArrayList<String>() else item!!
-//          itens.add("/123.3gp")
-//          itens.add("/321.3gp")
-//          Paper.book(CATEGORY).write(ITEM, itens)
           reloadAdapter()
         }
       }
@@ -87,38 +82,12 @@ class ItemActivity : AppCompatActivity() {
         }
       }
 
-//      button {
-//        text = "Tocar Audio"
-//        onClick {
-//          try {
-//            if (mMediaPlayer == null) {
-//              mMediaPlayer = MediaPlayer()
-//              mMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-////              val mFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/default.3gp";
-//              mMediaPlayer!!.setDataSource(mFileName)
-//              mMediaPlayer!!.prepare()
-//            }
-//            mMediaPlayer!!.start()
-//
-////            if (mMediaPlayer.isPlaying()) {
-////              mMediaPlayer.pause()
-////            } else {
-////
-////            }
-//
-//          } catch (e: IOException) {
-//            e.printStackTrace()
-//          }
-//
-//        }
-//      }
       textView {
         text = ITEM
         textSize = 42f
       }
       filesListView = listView {
         onItemClick { adapterView, view, i, l ->
-          //          startActivity<ItemActivity>("item" to ItemsActivity.itens!!)
           try {
 //              toast(item!![i] )
               mMediaPlayer = MediaPlayer()
@@ -135,12 +104,9 @@ class ItemActivity : AppCompatActivity() {
     }
   }
 
-//  private var item: ArrayList<String>? = null
   private fun fetchItem(): ArrayList<String> = Paper.book(CATEGORY).read(ITEM)
 
   private fun reloadAdapter() {
-//      item = Paper.book(CATEGORY).read(ITEM)
-//      item = intent.getSerializableExtra("item") as ArrayList<String>
       val adapter = ArrayAdapter<String>(this, R.layout.simple_list_item_1, fetchItem())
       filesListView!!.adapter = adapter
   }
