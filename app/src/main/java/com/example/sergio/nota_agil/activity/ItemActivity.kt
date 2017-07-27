@@ -13,6 +13,7 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -37,11 +38,12 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   private var CATEGORY: String = ""
   private var ITEM: String = ""
   private val TAG = "ItemActivity"
-  private var filesListView: ListView? = null
   private val mFileName: StringBuilder = StringBuilder()
   private var mMediaRecorder: MediaRecorder? = null
   private var mMediaPlayer: MediaPlayer? = null
-
+  private var filesListView: ListView? = null
+  private var recordButton: Button? = null
+  private var stopRecordButton: Button? = null
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -54,9 +56,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     toast(CATEGORY)
     toast(ITEM)
   }
-
-  private var recordButton: Button? = null
-  private var stopRecordButton: Button? = null
 
   private fun defineLayout() {
     verticalLayout {
@@ -82,6 +81,12 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       button {
         text = "Test Google Drive"
         onClick { startActivity<GoogleDriveActivity>() }
+      }
+
+      button {
+        text = "Tirar foto"
+        onClick { startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+            REQUEST_CODE_CAPTURE_IMAGE )}
       }
 
       textView {
@@ -124,7 +129,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   }
 
   private fun getCompletePath(itemName: String) = fecthAbsolutePath() + "/" + itemName + ".3gp"
-
 
   private fun stopRecord() {
     mMediaRecorder?.stop()
@@ -208,13 +212,13 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   }
 
   override fun onConnectionSuspended(cause: Int) {
-    Log.i(ItemActivity.TAG, "GoogleApiClient connection suspended")
+    Log.i(TAG, "GoogleApiClient connection suspended")
   }
 
   private var mBitmapToSave: Bitmap? = null
 
   override fun onConnected(connectionHint: Bundle?) {
-    Log.i(ItemActivity.TAG, "API client connected.")
+    Log.i(TAG, "API client connected.")
 //    if (mBitmapToSave == null) {
 //      // This activity has no UI of its own. Just start the camera.
 //      startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE),
@@ -228,7 +232,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
   private fun saveFileToDrive() {
     // Start by creating a new contents, and setting a callback.
-    Log.i(ItemActivity.TAG, "Creating new contents.")
+    Log.i(TAG, "Creating new contents.")
     val image = mBitmapToSave
     Drive.DriveApi.newDriveContents(mGoogleApiClient)
         .setResultCallback(ResultCallback<DriveApi.DriveContentsResult> { result ->
@@ -236,11 +240,11 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
           // and must
           // fail.
           if (!result.status.isSuccess) {
-            Log.i(ItemActivity.TAG, "Failed to create new contents.")
+            Log.i(TAG, "Failed to create new contents.")
             return@ResultCallback
           }
           // Otherwise, we can write our data to the new contents.
-          Log.i(ItemActivity.TAG, "New contents created.")
+          Log.i(TAG, "New contents created.")
           // Get an output stream for the contents.
           val outputStream = result.driveContents.outputStream
           // Write the bitmap data from it.
@@ -249,7 +253,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
           try {
             outputStream.write(bitmapStream.toByteArray())
           } catch (e1: IOException) {
-            Log.i(ItemActivity.TAG, "Unable to write file contents.")
+            Log.i(TAG, "Unable to write file contents.")
           }
 
           // Create the initial metadata - MIME type and title.
@@ -266,35 +270,35 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
             startIntentSenderForResult(
                 intentSender, ItemActivity.REQUEST_CODE_CREATOR, null, 0, 0, 0)
           } catch (e: IntentSender.SendIntentException) {
-            Log.i(ItemActivity.TAG, "Failed to launch file chooser.")
+            Log.i(TAG, "Failed to launch file chooser.")
           }
         })
   }
 
-  override fun onResume() {
-    super.onResume()
-    if (mGoogleApiClient == null) {
-      // Create the API client and bind it to an instance variable.
-      // We use this instance as the callback for connection and connection
-      // failures.
-      // Since no account name is passed, the user is prompted to choose.
-      mGoogleApiClient = GoogleApiClient.Builder(this)
-          .addApi(Drive.API)
-          .addScope(Drive.SCOPE_FILE)
-          .addConnectionCallbacks(this)
-          .addOnConnectionFailedListener(this)
-          .build()
-    }
-    // Connect the client. Once connected, the camera is launched.
-    mGoogleApiClient!!.connect()
-  }
-
-  override fun onPause() {
-    if (mGoogleApiClient != null) {
-      mGoogleApiClient!!.disconnect()
-    }
-    super.onPause()
-  }
+//  override fun onResume() {
+//    super.onResume()
+//    if (mGoogleApiClient == null) {
+//      // Create the API client and bind it to an instance variable.
+//      // We use this instance as the callback for connection and connection
+//      // failures.
+//      // Since no account name is passed, the user is prompted to choose.
+//      mGoogleApiClient = GoogleApiClient.Builder(this)
+//          .addApi(Drive.API)
+//          .addScope(Drive.SCOPE_FILE)
+//          .addConnectionCallbacks(this)
+//          .addOnConnectionFailedListener(this)
+//          .build()
+//    }
+//    // Connect the client. Once connected, the camera is launched.
+//    mGoogleApiClient!!.connect()
+//  }
+//
+//  override fun onPause() {
+//    if (mGoogleApiClient != null) {
+//      mGoogleApiClient!!.disconnect()
+//    }
+//    super.onPause()
+//  }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
     when (requestCode) {
@@ -303,22 +307,27 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         if (resultCode == Activity.RESULT_OK) {
           // Store the image data as a bitmap for writing later.
           mBitmapToSave = data.extras.get("data") as Bitmap
+
+
+
+
+
         }
       ItemActivity.REQUEST_CODE_CREATOR ->
         // Called after a file is saved to Drive.
         if (resultCode == Activity.RESULT_OK) {
-          Log.i(ItemActivity.TAG, "Image successfully saved.")
+          Log.i(TAG, "Image successfully saved.")
           mBitmapToSave = null
           // Just start the camera again for another photo.
-//          startActivityForResult(Intent(MediaStore.ACTIONIMAGE_CAPTURE),
-//              ItemActivity.REQUEST_CODE_CAPTURE_IMAGE)
+          startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+              REQUEST_CODE_CAPTURE_IMAGE)
         }
     }
   }
 
   override fun onConnectionFailed(result: ConnectionResult) {
     // Called whenever the API client fails to connect.
-    Log.i(ItemActivity.TAG, "GoogleApiClient connection failed: " + result.toString())
+    Log.i(TAG, "GoogleApiClient connection failed: " + result.toString())
     if (!result.hasResolution()) {
       // show the localized error dialog.
       GoogleApiAvailability.getInstance().getErrorDialog(this, result.errorCode, 0).show()
@@ -331,13 +340,13 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     try {
       result.startResolutionForResult(this, ItemActivity.REQUEST_CODE_RESOLUTION)
     } catch (e: IntentSender.SendIntentException) {
-      Log.e(ItemActivity.TAG, "Exception while starting resolution activity", e)
+      Log.e(TAG, "Exception while starting resolution activity", e)
     }
 
   }
 
   companion object {
-    private val TAG = "drive-quickstart"
+//    private val TAG = "drive-quickstart"
     private val REQUEST_CODE_CAPTURE_IMAGE = 1
     private val REQUEST_CODE_CREATOR = 2
     private val REQUEST_CODE_RESOLUTION = 3
