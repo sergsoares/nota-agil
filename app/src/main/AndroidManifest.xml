@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".activity.ItemsActivity"></activity>
         <activity android:name=".activity.ItemActivity"></activity>
+        <activity android:name=".activity.GoogleDriveActivity"></activity>
 
     </application>
 
