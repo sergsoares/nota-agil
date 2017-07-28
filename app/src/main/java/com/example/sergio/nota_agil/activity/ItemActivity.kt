@@ -29,6 +29,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResultCallback
 import com.google.android.gms.drive.Drive
 import com.google.android.gms.drive.DriveApi
+import com.google.android.gms.drive.DriveId
 import com.google.android.gms.drive.MetadataChangeSet
 import io.paperdb.Paper
 import org.jetbrains.anko.*
@@ -41,7 +42,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   private var CATEGORY: String = ""
   private var ITEM: String = ""
   private val TAG = "ItemActivity"
-//  private val mFileName: StringBuilder = StringBuilder()
+  //  private val mFileName: StringBuilder = StringBuilder()
   private var mMediaRecorder: MediaRecorder? = null
   private var mMediaPlayer: MediaPlayer? = null
   private var filesListView: ListView? = null
@@ -68,6 +69,16 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     reloadAdapter()
     toast(CATEGORY)
     toast(ITEM)
+
+  }
+
+  private fun restoreDriveId() {
+    var driveIdRestored: DriveId? = Paper.book("driveId").read(CATEGORY)
+    if (driveIdRestored == null) {
+      createFolderInDrive()
+    } else {
+      mFolderDriveId = driveIdRestored
+    }
   }
 
   private fun defineLayout() {
@@ -98,8 +109,10 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
       button {
         text = "Tirar foto"
-        onClick { startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-            REQUEST_CODE_CAPTURE_IMAGE )}
+        onClick {
+          startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+              REQUEST_CODE_CAPTURE_IMAGE)
+        }
       }
 
       textView {
@@ -175,7 +188,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
 
     if (itemName.endsWith(".jpg")) {
-      try{
+      try {
         val intent = Intent()
         intent.action = android.content.Intent.ACTION_VIEW
         val uri = Uri.parse("file://" + getCompletePath(itemName))
@@ -190,47 +203,39 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   private fun fetchItem(): ArrayList<String> = Paper.book(CATEGORY).read(ITEM)
 
   private fun reloadAdapter() {
-      val adapter = ArrayAdapter<String>(this, R.layout.simple_list_item_1, fetchItem())
-      filesListView!!.adapter = adapter
+    val adapter = ArrayAdapter<String>(this, R.layout.simple_list_item_1, fetchItem())
+    filesListView!!.adapter = adapter
   }
 
-  fun isRecordPermissionGranted():Boolean {
-    if (Build.VERSION.SDK_INT >= 23)
-    {
-      if (this.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) === PackageManager.PERMISSION_GRANTED)
-      {
+  fun isRecordPermissionGranted(): Boolean {
+    if (Build.VERSION.SDK_INT >= 23) {
+      if (this.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) === PackageManager.PERMISSION_GRANTED) {
         Log.v(TAG, "Permission is granted")
         return true
-      }
-      else
-      {
+      } else {
         Log.v(TAG, "Permission is revoked")
         ActivityCompat.requestPermissions(this,
             arrayOf<String>(Manifest.permission.RECORD_AUDIO), 2)
         return false
       }
-    }
-    else
-    { //permission is automatically granted on sdk<23 upon installation
+    } else { //permission is automatically granted on sdk<23 upon installation
       Log.v(TAG, "Permission is granted")
       return true
     }
   }
 
-  fun isStoragePermissionGranted():Boolean {
+  fun isStoragePermissionGranted(): Boolean {
     if (Build.VERSION.SDK_INT >= 23) {
       if (this.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) === PackageManager.PERMISSION_GRANTED) {
         Log.v(TAG, "Permission is granted")
         return true
-      }
-      else {
+      } else {
         Log.v(TAG, "Permission is revoked")
         ActivityCompat.requestPermissions(this,
             arrayOf<String>(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
         return false
       }
-    }
-    else { //permission is automatically granted on sdk<23 upon installation
+    } else { //permission is automatically granted on sdk<23 upon installation
       Log.v(TAG, "Permission is granted")
       return true
     }
@@ -238,7 +243,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
   private fun fecthAbsolutePath() = Environment.getExternalStorageDirectory().getAbsolutePath()
 
-  private fun getTimestamp() = (System.currentTimeMillis() / 1000 ).toString()
+  private fun getTimestamp() = (System.currentTimeMillis() / 1000).toString()
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -336,7 +341,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 //              .setInitialDriveContents(result.driveContents)
 //              .build(mGoogleApiClient!!)
 
-            Drive.DriveApi.getRootFolder(mGoogleApiClient!!)
+          Drive.DriveApi.getRootFolder(mGoogleApiClient!!)
               .createFile(mGoogleApiClient!!, metadataChangeSet, result.driveContents)
               .setResultCallback { toast("Gravado") }
 
@@ -350,9 +355,9 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         })
   }
 
-//  private var  mFolderDriveId: DriveId? = null
-//
-//  private fun saveFileInDriveRootFolder(image: Bitmap?) {
+  private var mFolderDriveId: DriveId? = null
+  //
+  private fun saveFileInDriveRootFolder(image: Bitmap?) {
 //
 //    val saveInDriveFolder = {
 //      Drive.DriveApi.newDriveContents(mGoogleApiClient)
@@ -375,26 +380,35 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 //          })
 //    }
 
-//    Drive.DriveApi.fetchDriveId(mGoogleApiClient, CATEGORY)
-//        .setResultCallback {
-//          if (!it.getStatus().isSuccess()) {
-//          toast("Cannot find DriveId. Are you authorized to view this file?");
-//
-//          }
-//          mFolderDriveId = it.driveId;
-//          saveInDriveFolder()
-//        }
-//
-//
-//  }
+//  findFolderInDrive()
 
-//  private fun createFolderInDrive() {
-//    val changeSet = MetadataChangeSet.Builder()
-//        .setTitle(CATEGORY).build()
+  }
+
+  private fun findFolderInDrive() {
+    Drive.DriveApi.fetchDriveId(mGoogleApiClient, CATEGORY)
+        .setResultCallback {
+          if (!it.getStatus().isSuccess()) {
+            toast("Pasta não encontrada");
+            createFolderInDrive()
+          } else {
+            //usa ela
+          }
 //
-//    Drive.DriveApi.getRootFolder(mGoogleApiClient).createFolder(
-//        mGoogleApiClient, changeSet).setResultCallback { toast("Pasta Criada") }
-//  }
+          //          saveInDriveFolder()
+        }
+  }
+
+  private fun createFolderInDrive() {
+    val changeSet = MetadataChangeSet.Builder()
+        .setTitle(CATEGORY).build()
+
+    Drive.DriveApi.getRootFolder(mGoogleApiClient).createFolder(
+        mGoogleApiClient, changeSet).setResultCallback {
+      toast("Pasta Criada")
+      Paper.book("driveId").write(CATEGORY, it.driveFolder.driveId)
+      mFolderDriveId = it.driveFolder.driveId
+    }
+  }
 
 
   override fun onResume() {
@@ -404,16 +418,12 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       // We use this instance as the callback for connection and connection
       // failures.
       // Since no account name is passed, the user is prompted to choose.
-      mGoogleApiClient = GoogleApiClient.Builder(this)
-          .addApi(Drive.API)
-          .addScope(Drive.SCOPE_FILE)
-          .addConnectionCallbacks(this)
-          .addOnConnectionFailedListener(this)
-          .build()
+      connectToGoogleDrive()
+    } else {
+      mGoogleApiClient!!.connect()
     }
-    // Connect the client. Once connected, the camera is launched.
-    mGoogleApiClient!!.connect()
-//    createFolderInDrive()
+//    findFolderInDrive()
+//    restoreDriveId()
   }
 
   override fun onPause() {
@@ -470,9 +480,21 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   }
 
   companion object {
-//    private val TAG = "drive-quickstart"
+    //    private val TAG = "drive-quickstart"
     private val REQUEST_CODE_CAPTURE_IMAGE = 1
     private val REQUEST_CODE_CREATOR = 2
     private val REQUEST_CODE_RESOLUTION = 3
+  }
+
+  private fun connectToGoogleDrive() {
+    mGoogleApiClient = GoogleApiClient.Builder(this)
+        .addApi(Drive.API)
+        .addScope(Drive.SCOPE_FILE)
+        .addConnectionCallbacks(this)
+        .addOnConnectionFailedListener(this)
+        .build()
+
+    // Connect the client. Once connected, the camera is launched.
+    mGoogleApiClient!!.connect()
   }
 }
