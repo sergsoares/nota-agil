@@ -1,10 +1,8 @@
 package com.example.sergio.nota_agil.activity
 
 import android.Manifest
-import android.R
 import android.app.Activity
 import android.content.Intent
-import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.media.AudioManager
@@ -16,15 +14,18 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.StrictMode
 import android.provider.MediaStore
+import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.ContextMenu
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListView
+import com.example.sergio.nota_agil.R
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResultCallback
 import com.google.android.gms.drive.Drive
@@ -36,18 +37,22 @@ import org.jetbrains.anko.*
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import kotlinx.android.synthetic.main.activity_scrolling.app_bar as appBarLayout
+import kotlinx.android.synthetic.main.content_scrolling.button_record as buttonRecord
+import kotlinx.android.synthetic.main.content_scrolling.button_send_to_gdrive as buttonSendToGDrive
+import kotlinx.android.synthetic.main.content_scrolling.button_stop_record as buttonStopRecord
+import kotlinx.android.synthetic.main.content_scrolling.button_take_photo as buttonTakePhoto
+import kotlinx.android.synthetic.main.content_scrolling.list_view_files as listViewFiles
 
 class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
   private var CATEGORY: String = ""
   private var ITEM: String = ""
   private val TAG = "ItemActivity"
-  //  private val mFileName: StringBuilder = StringBuilder()
   private var mMediaRecorder: MediaRecorder? = null
   private var mMediaPlayer: MediaPlayer? = null
-  private var filesListView: ListView? = null
-  private var recordButton: Button? = null
-  private var stopRecordButton: Button? = null
+//  private var recordButton: Button? = null
+//  private var stopRecordButton: Button? = null
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -60,15 +65,90 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       }
 
     }
+    setContentView(com.example.sergio.nota_agil.R.layout.activity_scrolling)
+    val toolbar = findViewById(com.example.sergio.nota_agil.R.id.toolbar) as Toolbar
+    setSupportActionBar(toolbar)
+
+    val fab = findViewById(com.example.sergio.nota_agil.R.id.fab) as FloatingActionButton
+    fab.setOnClickListener { view ->
+      Snackbar.make(view, "Sincronização iniciada", Snackbar.LENGTH_LONG)
+          .setAction("Action", null).show()
+    }
+
 
     CATEGORY = intent.getStringExtra("category")
     ITEM = intent.getStringExtra("item")
+//    toolbar.title = ITEM
+    setTitle(ITEM)
+
     isRecordPermissionGranted()
     isStoragePermissionGranted()
-    defineLayout()
+//    defineLayout()
     reloadAdapter()
-    toast(CATEGORY)
-    toast(ITEM)
+    setListeners()
+    registerForContextMenu(listViewFiles)
+  }
+
+  private fun setListeners() {
+    buttonRecord.setOnClickListener { view ->
+      startRecord()
+      buttonRecord.visibility = View.GONE
+      buttonStopRecord?.visibility = View.VISIBLE
+
+
+//      val buttonStop = findViewById() as AppCompatImageButton
+//      buttonStop.setOnClickListener { view ->
+//        stopRecord()
+//        buttonRecord?.visibility = View.VISIBLE
+//        buttonStopRecord?.visibility = View.GONE
+//        reloadAdapter()
+//        Snackbar.make(view, "Gravação encerrada.", Snackbar.LENGTH_LONG)
+//            .setAction("Action", null).show()
+//      }
+
+//      AlertDialog.Builder(this)
+//          .setView(R.layout.custom_record_dialog)
+////          .setTitle("")
+//
+//          .setPositiveButton("OK") { _, _ ->
+//            stopRecord()
+////            buttonRecord?.visibility = View.VISIBLE
+////            buttonStopRecord?.visibility = View.GONE
+////
+////            Snackbar.make(view, "Gravação encerrada.", Snackbar.LENGTH_LONG)
+////                .setAction("Action", null).show()
+//            reloadAdapter()
+//          }
+//        .show()
+
+      Snackbar.make(view, "Gravação iniciada.", Snackbar.LENGTH_LONG)
+          .setAction("Action", null).show()
+
+    }
+
+    buttonStopRecord.setOnClickListener { view ->
+      stopRecord()
+      buttonRecord?.visibility = View.VISIBLE
+      buttonStopRecord?.visibility = View.GONE
+
+      Snackbar.make(view, "Gravação encerrada.", Snackbar.LENGTH_LONG)
+          .setAction("Action", null).show()
+    }
+
+    buttonSendToGDrive.onClick {
+      saveFileToDrive()
+    }
+
+    buttonTakePhoto.setOnClickListener { view ->
+      Snackbar.make(view, "Camera Iniciada.", Snackbar.LENGTH_LONG)
+          .setAction("Action", null).show()
+      startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+          REQUEST_CODE_CAPTURE_IMAGE)
+    }
+
+    listViewFiles.onItemClick { adapterView, view, i, l ->
+      executeMedia(fetchItem()[i])
+    }
 
   }
 
@@ -83,29 +163,29 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
   private fun defineLayout() {
     verticalLayout {
-      recordButton = button {
-        text = "Gravar Audio"
-        onClick {
-          startRecord()
-          recordButton?.visibility = View.GONE
-          stopRecordButton?.visibility = View.VISIBLE
-        }
-      }
-
-      stopRecordButton = button {
-        text = "Parar Gravacao"
-        visibility = View.GONE
-        onClick {
-          stopRecord()
-          recordButton?.visibility = View.VISIBLE
-          stopRecordButton?.visibility = View.GONE
-        }
-      }
+//      recordButton = button {
+//        text = "Gravar Audio"
+//        onClick {
+//          startRecord()
+//          recordButton?.visibility = View.GONE
+//          stopRecordButton?.visibility = View.VISIBLE
+//        }
+//      }
+//
+//      stopRecordButton = button {
+//        text = "Parar Gravacao"
+//        visibility = View.GONE
+//        onClick {
+//          stopRecord()
+//          recordButton?.visibility = View.VISIBLE
+//          stopRecordButton?.visibility = View.GONE
+//        }
+//      }
 
       button {
         text = "Send last Image to Google Drive"
         onClick { saveFileToDrive() }
-      }
+        }
 
       button {
         text = "Tirar foto"
@@ -120,7 +200,8 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         textSize = 42f
       }
 
-      filesListView = listView {
+      listView {
+        padding = dip(30)
         onItemClick { adapterView, view, i, l ->
           executeMedia(fetchItem()[i])
         }
@@ -130,9 +211,10 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
   private var audioFileName: String? = ""
 
-  private fun Button.startRecord() {
+  private fun startRecord() {
     if (isStoragePermissionGranted() && isRecordPermissionGranted()) {
-      val pmanager = this.context.getPackageManager()
+      val pmanager = this.applicationContext.packageManager
+//          this.context.getPackageManager()
       if (pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
         mMediaRecorder = MediaRecorder()
         mMediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -151,7 +233,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
           Log.e(TAG, "prepare() failed")
         }
 
-        Log.e(TAG, "File is in ")
+        Log.e(TAG, "File is in " + audioFileName)
       }
     }
 //    reloadAdapter()
@@ -200,11 +282,31 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
   }
 
+
   private fun fetchItem(): ArrayList<String> = Paper.book(CATEGORY).read(ITEM)
 
   private fun reloadAdapter() {
-    val adapter = ArrayAdapter<String>(this, R.layout.simple_list_item_1, fetchItem())
-    filesListView!!.adapter = adapter
+    val adapter = ArrayAdapter<String>(this, R.layout.custom_layout_item, R.id.category_text_view, fetchItem())
+    listViewFiles.adapter = adapter
+  }
+
+  override fun onCreateContextMenu(
+      menu: ContextMenu,
+      view: View,
+      menuInfo: ContextMenu.ContextMenuInfo) {
+
+    val allCategories = fetchItem()
+    val info = menuInfo as AdapterView.AdapterContextMenuInfo
+    val fileClicked = allCategories[info.position]
+
+    val deletar = menu.add("Deletar")
+    deletar.setOnMenuItemClickListener {
+
+      allCategories.remove(fileClicked)
+      Paper.book(CATEGORY).write(ITEM, allCategories)
+      reloadAdapter()
+      false
+    }
   }
 
   fun isRecordPermissionGranted(): Boolean {
@@ -243,7 +345,10 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
   private fun fecthAbsolutePath() = Environment.getExternalStorageDirectory().getAbsolutePath()
 
-  private fun getTimestamp() = (System.currentTimeMillis() / 1000).toString()
+  private fun getTimestamp(): String {
+    val time = (System.currentTimeMillis() / 10).toString()
+    return ITEM.substring(0,1) + time.substring(time.length - 4)
+  }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -435,13 +540,14 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
   private var imageFileName: String = ""
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
     when (requestCode) {
       ItemActivity.REQUEST_CODE_CAPTURE_IMAGE ->
         // Called after a photo has been taken.
         if (resultCode == Activity.RESULT_OK) {
           // Store the image data as a bitmap for writing later.
-          mBitmapToSave = data.extras.get("data") as Bitmap
+          mBitmapToSave = data?.extras?.get("data") as Bitmap
           imageFileName = getTimestamp() + ".jpg"
           saveBitmap(mBitmapToSave, getCompletePath(imageFileName))
           saveFile(imageFileName)
@@ -460,22 +566,22 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   }
 
   override fun onConnectionFailed(result: ConnectionResult) {
-    // Called whenever the API client fails to connect.
-    Log.i(TAG, "GoogleApiClient connection failed: " + result.toString())
-    if (!result.hasResolution()) {
-      // show the localized error dialog.
-      GoogleApiAvailability.getInstance().getErrorDialog(this, result.errorCode, 0).show()
-      return
-    }
-    // The failure has a resolution. Resolve it.
-    // Called typically when the app is not yet authorized, and an
-    // authorization
-    // dialog is displayed to the user.
-    try {
-      result.startResolutionForResult(this, ItemActivity.REQUEST_CODE_RESOLUTION)
-    } catch (e: IntentSender.SendIntentException) {
-      Log.e(TAG, "Exception while starting resolution activity", e)
-    }
+//    // Called whenever the API client fails to connect.
+//    Log.i(TAG, "GoogleApiClient connection failed: " + result.toString())
+//    if (!result.hasResolution()) {
+//      // show the localized error dialog.
+//      GoogleApiAvailability.getInstance().getErrorDialog(this, result.errorCode, 0).show()
+//      return
+//    }
+//    // The failure has a resolution. Resolve it.
+//    // Called typically when the app is not yet authorized, and an
+//    // authorization
+//    // dialog is displayed to the user.
+//    try {
+//      result.startResolutionForResult(this, ItemActivity.REQUEST_CODE_RESOLUTION)
+//    } catch (e: IntentSender.SendIntentException) {
+//      Log.e(TAG, "Exception while starting resolution activity", e)
+//    }
 
   }
 

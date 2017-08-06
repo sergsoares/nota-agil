@@ -13,6 +13,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -33,20 +34,25 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
 
     // Anko
-    compile 'org.jetbrains.anko:anko-sdk15:0.9.1'// sdk19, sdk21, sdk23 are also available
-    compile 'org.jetbrains.anko:anko-support-v4:0.9.1' // In case you need support-v4 bindings
-    compile 'org.jetbrains.anko:anko-appcompat-v7:0.9.1' // For appcompat-v7 binding
+    // sdk19, sdk21, sdk23 are also available
+    // In case you need support-v4 bindings
+    // For appcompat-v7 binding
 
     //noinspection GradleCompatible
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    compile 'org.jetbrains.anko:anko-sdk15:0.9.1'
+    compile 'org.jetbrains.anko:anko-support-v4:0.9.1'
+    compile 'org.jetbrains.anko:anko-appcompat-v7:0.9.1'
     compile 'com.android.support:design:25.0.1'
     compile 'com.android.support:appcompat-v7:25.0.1'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'io.paperdb:paperdb:2.1'
     compile 'com.google.android.gms:play-services-drive:11.0.2'
-
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    testCompile 'junit:junit:4.12'
 }
 repositories {
     mavenCentral()
