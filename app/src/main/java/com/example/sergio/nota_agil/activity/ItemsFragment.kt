@@ -15,6 +15,7 @@ import com.example.sergio.nota_agil.R
 import io.paperdb.Paper
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.onItemClick
+import java.io.File
 import java.util.*
 import kotlinx.android.synthetic.main.items_fragment.button_new_item as buttonNewItem
 import kotlinx.android.synthetic.main.items_fragment.category_name_text_view as categoryNameTextView
@@ -92,6 +93,14 @@ class ItemsFragment : Fragment() {
     val renomear = menu.add("Renomear")
 
     deletar.setOnMenuItemClickListener {
+
+      val itemFiles = Paper.book(CATEGORY).read<ArrayList<String>>(itemClicked)
+
+      for(files in itemFiles){
+        val file = File(getCompletePath(files))
+        file.delete()
+      }
+
       Paper.book(CATEGORY).delete(itemClicked)
       reloadAdapter()
       true
@@ -107,8 +116,11 @@ class ItemsFragment : Fragment() {
             Paper.book(CATEGORY).write(input.text.toString(), arrayListTemp)
             Paper.book(CATEGORY).delete(itemClicked)
             reloadAdapter()
-          }.show();
+          }.show()
       true
     }
   }
+
+  private fun getCompletePath(itemName: String) = fecthAbsolutePath() + "/" + itemName
+  private fun fecthAbsolutePath() =  context.getExternalFilesDir(null).absolutePath
 }

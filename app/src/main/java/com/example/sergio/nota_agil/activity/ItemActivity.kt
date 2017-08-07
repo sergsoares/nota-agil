@@ -11,12 +11,12 @@ import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.StrictMode
 import android.provider.MediaStore
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
@@ -24,6 +24,7 @@ import android.view.ContextMenu
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import com.example.sergio.nota_agil.R
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -33,13 +34,14 @@ import com.google.android.gms.drive.DriveApi
 import com.google.android.gms.drive.DriveId
 import com.google.android.gms.drive.MetadataChangeSet
 import io.paperdb.Paper
-import org.jetbrains.anko.*
-import java.io.ByteArrayOutputStream
+import org.apache.commons.io.FileUtils
+import org.jetbrains.anko.onItemClick
+import org.jetbrains.anko.toast
+import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import kotlinx.android.synthetic.main.activity_scrolling.app_bar as appBarLayout
 import kotlinx.android.synthetic.main.content_scrolling.button_record as buttonRecord
-import kotlinx.android.synthetic.main.content_scrolling.button_send_to_gdrive as buttonSendToGDrive
 import kotlinx.android.synthetic.main.content_scrolling.button_stop_record as buttonStopRecord
 import kotlinx.android.synthetic.main.content_scrolling.button_take_photo as buttonTakePhoto
 import kotlinx.android.synthetic.main.content_scrolling.list_view_files as listViewFiles
@@ -51,8 +53,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   private val TAG = "ItemActivity"
   private var mMediaRecorder: MediaRecorder? = null
   private var mMediaPlayer: MediaPlayer? = null
-//  private var recordButton: Button? = null
-//  private var stopRecordButton: Button? = null
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -63,27 +63,28 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       } catch (e: Exception) {
         e.printStackTrace()
       }
-
     }
+
     setContentView(com.example.sergio.nota_agil.R.layout.activity_scrolling)
     val toolbar = findViewById(com.example.sergio.nota_agil.R.id.toolbar) as Toolbar
     setSupportActionBar(toolbar)
 
     val fab = findViewById(com.example.sergio.nota_agil.R.id.fab) as FloatingActionButton
     fab.setOnClickListener { view ->
+      val itemsList = fetchItem()
+      for(item in itemsList ){
+        saveFileToDrive(item)
+      }
       Snackbar.make(view, "Sincronização iniciada", Snackbar.LENGTH_LONG)
           .setAction("Action", null).show()
     }
 
-
     CATEGORY = intent.getStringExtra("category")
     ITEM = intent.getStringExtra("item")
-//    toolbar.title = ITEM
     setTitle(ITEM)
 
     isRecordPermissionGranted()
     isStoragePermissionGranted()
-//    defineLayout()
     reloadAdapter()
     setListeners()
     registerForContextMenu(listViewFiles)
@@ -135,10 +136,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
           .setAction("Action", null).show()
     }
 
-    buttonSendToGDrive.onClick {
-      saveFileToDrive()
-    }
-
     buttonTakePhoto.setOnClickListener { view ->
       Snackbar.make(view, "Camera Iniciada.", Snackbar.LENGTH_LONG)
           .setAction("Action", null).show()
@@ -161,54 +158,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
   }
 
-  private fun defineLayout() {
-    verticalLayout {
-//      recordButton = button {
-//        text = "Gravar Audio"
-//        onClick {
-//          startRecord()
-//          recordButton?.visibility = View.GONE
-//          stopRecordButton?.visibility = View.VISIBLE
-//        }
-//      }
-//
-//      stopRecordButton = button {
-//        text = "Parar Gravacao"
-//        visibility = View.GONE
-//        onClick {
-//          stopRecord()
-//          recordButton?.visibility = View.VISIBLE
-//          stopRecordButton?.visibility = View.GONE
-//        }
-//      }
-
-      button {
-        text = "Send last Image to Google Drive"
-        onClick { saveFileToDrive() }
-        }
-
-      button {
-        text = "Tirar foto"
-        onClick {
-          startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-              REQUEST_CODE_CAPTURE_IMAGE)
-        }
-      }
-
-      textView {
-        text = ITEM
-        textSize = 42f
-      }
-
-      listView {
-        padding = dip(30)
-        onItemClick { adapterView, view, i, l ->
-          executeMedia(fetchItem()[i])
-        }
-      }
-    }
-  }
-
   private var audioFileName: String? = ""
 
   private fun startRecord() {
@@ -220,9 +169,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         mMediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
         mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
         mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-        //TODO: Clean mFileName to dont concat all new media recorded
-//        mFileName.setLength(0)
-//        mFileName.append(getTimestamp())
         audioFileName = getTimestamp() + ".3gp"
         mMediaRecorder?.setOutputFile(getCompletePath(audioFileName.toString()))
         try {
@@ -233,10 +179,9 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
           Log.e(TAG, "prepare() failed")
         }
 
-        Log.e(TAG, "File is in " + audioFileName)
+        Log.e(TAG, "File is in " + getCompletePath(audioFileName.toString()))
       }
     }
-//    reloadAdapter()
   }
 
   private fun getCompletePath(itemName: String) = fecthAbsolutePath() + "/" + itemName
@@ -299,14 +244,84 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     val info = menuInfo as AdapterView.AdapterContextMenuInfo
     val fileClicked = allCategories[info.position]
 
-    val deletar = menu.add("Deletar")
-    deletar.setOnMenuItemClickListener {
+
+    menu.add("Deletar").setOnMenuItemClickListener {
 
       allCategories.remove(fileClicked)
       Paper.book(CATEGORY).write(ITEM, allCategories)
+      val file = File(getCompletePath(fileClicked))
+
+      if (file.delete()) {
+        toast(file.name + " foi Deletado!")
+      } else {
+        toast("Delete operation is failed.")
+      }
       reloadAdapter()
       false
     }
+
+    menu.add("Renomear").setOnMenuItemClickListener {
+      val input = EditText(this)
+
+      var type: String = ""
+      if (fileClicked.endsWith(".3gp")) {
+        type = ".3gp"
+      }
+      if (fileClicked.endsWith(".jpg")) {
+        type = ".jpg"
+      }
+
+//      Selection.setSelection(input.text, input.text.length)
+//      input.addTextChangedListener(object : TextWatcher {
+//
+//        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//          // TODO Auto-generated method stub
+//        }
+//
+//        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int,
+//                                       after: Int) {
+//          // TODO Auto-generated method stub
+//        }
+//
+//        override fun afterTextChanged(s: Editable) {
+//          if (!s.toString().endsWith(type)) {
+//            Selection.setSelection(input.getText(), input.getText().length)
+//            input.setText(type)
+//          }
+//
+//        }
+//      })
+
+      AlertDialog.Builder(this)
+          .setView(input)
+          .setTitle("Insira novo nome")
+          .setPositiveButton("OK") { _, _ ->
+
+            allCategories.remove(fileClicked)
+            val newFileName = input.text.toString().plus(type)
+            allCategories.add(newFileName)
+            //TODO: Rename File
+
+            val oldFile = File(getCompletePath(fileClicked))
+            val newFile = File(getCompletePath(newFileName))
+            Log.e(TAG, "OldFile is in " + getCompletePath(fileClicked))
+            Log.e(TAG, "NewFile is in " + getCompletePath(newFileName))
+
+            if (oldFile.renameTo(newFile)){
+              toast("Arquivo Renomeado.")
+            } else {
+              toast("Arquivo não pode ser renomeado.");
+            }
+
+            Paper.book(CATEGORY).write(ITEM, allCategories)
+            reloadAdapter()
+          }.show();
+
+
+
+      false
+    }
+
   }
 
   fun isRecordPermissionGranted(): Boolean {
@@ -343,7 +358,8 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
   }
 
-  private fun fecthAbsolutePath() = Environment.getExternalStorageDirectory().getAbsolutePath()
+  private fun fecthAbsolutePath() =  baseContext.getExternalFilesDir(null).absolutePath //Environment.getExternalStorageDirectory().getAbsolutePath()
+
 
   private fun getTimestamp(): String {
     val time = (System.currentTimeMillis() / 10).toString()
@@ -404,11 +420,12 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
   private var mGoogleApiClient: GoogleApiClient? = null
 
-  private fun saveFileToDrive() {
+  private fun saveFileToDrive(fileName: String) {
     // Start by creating a new contents, and setting a callback.
     Log.i(TAG, "Creating new contents.")
     toast("Gravando Imagens")
-    val image = mBitmapToSave
+      val imageFile = File(getCompletePath(fileName))
+//    val image = mBitmapToSave
 
 //    saveFileInDriveRootFolder(image)
 
@@ -426,10 +443,13 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
           // Get an output stream for the contents.
           val outputStream = result.driveContents.outputStream
           // Write the bitmap data from it.
-          val bitmapStream = ByteArrayOutputStream()
-          image!!.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream)
+//          val bitmapStream = ByteArrayOutputStream()
+//          image!!.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream)
+
+          val fileByte = FileUtils.readFileToByteArray(imageFile)
+
           try {
-            outputStream.write(bitmapStream.toByteArray())
+            outputStream.write(fileByte)
           } catch (e1: IOException) {
             Log.i(TAG, "Unable to write file contents.")
           }
@@ -438,7 +458,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
           // Note that the user will be able to change the title later.
           val metadataChangeSet = MetadataChangeSet.Builder()
 //              .setMimeType("image/jpeg")
-              .setTitle(imageFileName).build()
+              .setTitle(fileName).build()
           // Create an intent for the file chooser, and start it.
 //          val intentSender = Drive.DriveApi
 //              .newCreateFileActivityBuilder()
@@ -448,7 +468,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
           Drive.DriveApi.getRootFolder(mGoogleApiClient!!)
               .createFile(mGoogleApiClient!!, metadataChangeSet, result.driveContents)
-              .setResultCallback { toast("Gravado") }
+              .setResultCallback { toast("Gravado" + " - "+ imageFile ) }
 
 //          try {
 //            startIntentSenderForResult(
