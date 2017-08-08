@@ -1,6 +1,5 @@
 package com.example.sergio.nota_agil.activity
 
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.FragmentTransaction
@@ -54,18 +53,12 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     buttonNewCategory.onClick { createNewCategory() }
     registerForContextMenu(listViewCategories)
 
-    openSearchFragment()
-
-    val sharedPreferences = getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE)
-    val result = sharedPreferences.getString("CATEGORY", "")
-    toast(result)
-
+    openfastActionsFragment()
   }
 
-  private fun openSearchFragment() {
-    val fm = getSupportFragmentManager()
-    var fragmentTransaction: FragmentTransaction? = fm.beginTransaction()
-    val newFrag = SearchFragment()
+  private fun openfastActionsFragment() {
+    var fragmentTransaction: FragmentTransaction? = supportFragmentManager.beginTransaction()
+    val newFrag = fastActionsFragment()
     fragmentTransaction?.replace(R.id.frame_layout, newFrag);
     fragmentTransaction?.addToBackStack(null)
     fragmentTransaction?.commit()
@@ -77,29 +70,26 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         .setView(input)
         .setTitle("Criar Nova Categoria")
         .setPositiveButton("OK") { _, _ ->
-          Paper.book(input.text.toString())
-
-          //book default save others book Names
-          Paper.book().write(input.text.toString(), input.text.toString())
+          val newCategoryName = input.text.toString()
+          Paper.book(newCategoryName)
+          Paper.book().write(newCategoryName, newCategoryName)
           reloadAdapter()
         }.show();
   }
 
   private fun putItemsFragment() {
-    listViewCategories.onItemClick { adapterView, view, i, l ->
-
-      val fm = getSupportFragmentManager()
-      var fragmentTransaction: FragmentTransaction? = fm.beginTransaction()
-
+    listViewCategories!!.onItemClick { adapterView, view, i, l ->
+      var fragmentTransaction: FragmentTransaction? = supportFragmentManager.beginTransaction()
       val bundle = Bundle()
       bundle.putString("category", Paper.book().allKeys[i])
       val newFrag = ItemsFragment()
-
       newFrag.arguments = bundle
+
       fragmentTransaction?.replace(R.id.frame_layout, newFrag);
       fragmentTransaction?.addToBackStack(null)
       fragmentTransaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
       fragmentTransaction?.commit()
+
       val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
       drawer.closeDrawer(GravityCompat.START)
     }
@@ -115,7 +105,7 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     if (drawer.isDrawerOpen(GravityCompat.START)) {
       drawer.closeDrawer(GravityCompat.START)
     } else {
-      openSearchFragment()
+      openfastActionsFragment()
     }
   }
 
@@ -172,8 +162,5 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
       false
     }
-
-
-
   }
 }

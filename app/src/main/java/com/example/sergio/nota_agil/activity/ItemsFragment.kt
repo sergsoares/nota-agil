@@ -49,13 +49,6 @@ class ItemsFragment : Fragment() {
       intent.putExtra("category",CATEGORY)
       intent.putExtra("item", fetchItems()[i])
 
-      val settings = context.getSharedPreferences("PREFERENCES", 0)
-      val editor = settings.edit()
-
-      editor.putString("CATEGORY", CATEGORY)
-      editor.putString("ITEM", fetchItems()[i])
-      editor.commit()
-
       startActivity(intent)
     }
     registerForContextMenu(itensListView)

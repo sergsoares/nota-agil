@@ -88,6 +88,17 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     reloadAdapter()
     setListeners()
     registerForContextMenu(listViewFiles)
+    saveLastItemVisited()
+
+  }
+
+  private fun saveLastItemVisited() {
+    val settings = getSharedPreferences("PREFERENCES", 0)
+    val editor = settings.edit()
+
+    editor.putString("CATEGORY", CATEGORY)
+    editor.putString("ITEM", ITEM)
+    editor.commit()
   }
 
   private fun setListeners() {

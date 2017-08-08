@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:orientation="horizontal">
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_new_category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Criar nova categoria"
+            android:layout_weight="0.5"
+            android:textColor="#000"
+            android:layout_marginRight="2dp"
+            android:background="@color/colorSecondaryDark"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_search_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Pesquisar Item"
+            android:layout_weight="0.5"
+            android:textColor="#000"
+            android:layout_marginLeft="2dp"
+            android:background="@color/colorSecondaryDark"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/button_last_item"
+            android:text="Ultimo Item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"/>
+        <Button
+            android:id="@+id/button_whatever"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
