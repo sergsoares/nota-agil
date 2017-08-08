@@ -60,13 +60,7 @@ class SearchFragment : Fragment() {
         itemsCategories?.add(category)
       }
     }
-//    for (category in categories) {
-//      val categoryKeys = Paper.book(category).allKeys
-//      for(cat in categoryKeys)
-//        allItems.put(category, cat)
-//    }
 
-    
     val adapter = ArrayAdapter(context, R.layout.simple_list_item_1, allItems)
     listViewItems.adapter = adapter
     return adapter

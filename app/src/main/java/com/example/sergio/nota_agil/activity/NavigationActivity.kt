@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_navigation.list_view_categories a
 
 
 class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
@@ -38,11 +39,6 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     setContentView(R.layout.activity_navigation)
     val toolbar = findViewById(R.id.toolbar) as Toolbar
     setSupportActionBar(toolbar)
-
-//    fab.setOnClickListener { view ->
-//      Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//          .setAction("Action", null).show()
-//    }
 
     val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
     val toggle = ActionBarDrawerToggle(
@@ -106,11 +102,8 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
       fragmentTransaction?.commit()
       val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
       drawer.closeDrawer(GravityCompat.START)
-//        startActivity<ItemsFragment>("category" to Paper.book().allKeys[i])
     }
   }
-
-  // Insert CODE
 
   private fun reloadAdapter(){
     val adapterCategories = ArrayAdapter<String>(this, R.layout.categories_navigation, R.id.category_text_view ,Paper.book().allKeys)
@@ -127,22 +120,15 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    // Inflate the menu; this adds items to the action bar if it is present.
     menuInflater.inflate(R.menu.navigation, menu)
     return true
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
     val id = item.itemId
-
-
     if (id == R.id.action_settings) {
       return true
     }
-
     return super.onOptionsItemSelected(item)
   }
 
@@ -174,7 +160,6 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             Paper.book(newName)
             Paper.book().write(newName, newName)
 
-            //Copy from one book to another
             for(item in arrayListTemp){
               val itemValue = Paper.book(categoryClicked).read<ArrayList<String>>(item)
               Paper.book(newName).write(item, itemValue)

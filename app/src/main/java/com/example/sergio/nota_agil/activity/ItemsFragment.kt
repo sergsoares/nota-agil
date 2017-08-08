@@ -33,7 +33,6 @@ class ItemsFragment : Fragment() {
     super.onActivityCreated(savedInstanceState)
     val bundle = arguments
     if (bundle != null) {
-
       CATEGORY = bundle.getString("category")
       categoryNameTextView.text = CATEGORY
     }
@@ -122,5 +121,6 @@ class ItemsFragment : Fragment() {
   }
 
   private fun getCompletePath(itemName: String) = fecthAbsolutePath() + "/" + itemName
+
   private fun fecthAbsolutePath() =  context.getExternalFilesDir(null).absolutePath
 }

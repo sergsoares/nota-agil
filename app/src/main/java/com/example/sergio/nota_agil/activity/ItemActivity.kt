@@ -81,7 +81,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
     CATEGORY = intent.getStringExtra("category")
     ITEM = intent.getStringExtra("item")
-    setTitle(ITEM)
+    title = ITEM
 
     isRecordPermissionGranted()
     isStoragePermissionGranted()
@@ -95,32 +95,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       startRecord()
       buttonRecord.visibility = View.GONE
       buttonStopRecord?.visibility = View.VISIBLE
-
-
-//      val buttonStop = findViewById() as AppCompatImageButton
-//      buttonStop.setOnClickListener { view ->
-//        stopRecord()
-//        buttonRecord?.visibility = View.VISIBLE
-//        buttonStopRecord?.visibility = View.GONE
-//        reloadAdapter()
-//        Snackbar.make(view, "Gravação encerrada.", Snackbar.LENGTH_LONG)
-//            .setAction("Action", null).show()
-//      }
-
-//      AlertDialog.Builder(this)
-//          .setView(R.layout.custom_record_dialog)
-////          .setTitle("")
-//
-//          .setPositiveButton("OK") { _, _ ->
-//            stopRecord()
-////            buttonRecord?.visibility = View.VISIBLE
-////            buttonStopRecord?.visibility = View.GONE
-////
-////            Snackbar.make(view, "Gravação encerrada.", Snackbar.LENGTH_LONG)
-////                .setAction("Action", null).show()
-//            reloadAdapter()
-//          }
-//        .show()
 
       Snackbar.make(view, "Gravação iniciada.", Snackbar.LENGTH_LONG)
           .setAction("Action", null).show()
@@ -163,7 +137,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   private fun startRecord() {
     if (isStoragePermissionGranted() && isRecordPermissionGranted()) {
       val pmanager = this.applicationContext.packageManager
-//          this.context.getPackageManager()
       if (pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
         mMediaRecorder = MediaRecorder()
         mMediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -205,7 +178,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       try {
         mMediaPlayer = MediaPlayer()
         mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
-        //TODO: getCorrectPathToFile
         mMediaPlayer?.setDataSource(getCompletePath(itemName))
         mMediaPlayer?.prepare()
         mMediaPlayer?.start()
@@ -271,27 +243,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         type = ".jpg"
       }
 
-//      Selection.setSelection(input.text, input.text.length)
-//      input.addTextChangedListener(object : TextWatcher {
-//
-//        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-//          // TODO Auto-generated method stub
-//        }
-//
-//        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int,
-//                                       after: Int) {
-//          // TODO Auto-generated method stub
-//        }
-//
-//        override fun afterTextChanged(s: Editable) {
-//          if (!s.toString().endsWith(type)) {
-//            Selection.setSelection(input.getText(), input.getText().length)
-//            input.setText(type)
-//          }
-//
-//        }
-//      })
-
       AlertDialog.Builder(this)
           .setView(input)
           .setTitle("Insira novo nome")
@@ -316,8 +267,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
             Paper.book(CATEGORY).write(ITEM, allCategories)
             reloadAdapter()
           }.show();
-
-
 
       false
     }
@@ -384,7 +333,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       try {
         var outputStream: FileOutputStream? = null
         try {
-          outputStream = FileOutputStream(path) //here is set your file path where you want to save or also here you can set file object directly
+          outputStream = FileOutputStream(path)
 
           bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream) // bitmap is your Bitmap instance, if you want to compress it you can compress reduce percentage
           // PNG is a lossless format, the compression factor (100) is ignored
@@ -425,26 +374,16 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     Log.i(TAG, "Creating new contents.")
     toast("Gravando Imagens")
       val imageFile = File(getCompletePath(fileName))
-//    val image = mBitmapToSave
-
-//    saveFileInDriveRootFolder(image)
 
     Drive.DriveApi.newDriveContents(mGoogleApiClient)
         .setResultCallback(ResultCallback<DriveApi.DriveContentsResult> { result ->
-          // If the operation was not successful, we cannot do anything
-          // and must
-          // fail.
+
           if (!result.status.isSuccess) {
             Log.i(TAG, "Failed to create new contents.")
             return@ResultCallback
           }
-          // Otherwise, we can write our data to the new contents.
           Log.i(TAG, "New contents created.")
-          // Get an output stream for the contents.
           val outputStream = result.driveContents.outputStream
-          // Write the bitmap data from it.
-//          val bitmapStream = ByteArrayOutputStream()
-//          image!!.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream)
 
           val fileByte = FileUtils.readFileToByteArray(imageFile)
 
@@ -454,34 +393,18 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
             Log.i(TAG, "Unable to write file contents.")
           }
 
-          // Create the initial metadata - MIME type and title.
-          // Note that the user will be able to change the title later.
           val metadataChangeSet = MetadataChangeSet.Builder()
-//              .setMimeType("image/jpeg")
               .setTitle(fileName).build()
-          // Create an intent for the file chooser, and start it.
-//          val intentSender = Drive.DriveApi
-//              .newCreateFileActivityBuilder()
-//              .setInitialMetadata(metadataChangeSet)
-//              .setInitialDriveContents(result.driveContents)
-//              .build(mGoogleApiClient!!)
 
           Drive.DriveApi.getRootFolder(mGoogleApiClient!!)
               .createFile(mGoogleApiClient!!, metadataChangeSet, result.driveContents)
               .setResultCallback { toast("Gravado" + " - "+ imageFile ) }
 
-//          try {
-//            startIntentSenderForResult(
-//                intentSender, ItemActivity.REQUEST_CODE_CREATOR, null, 0, 0, 0)
-//            toast("Gravando Imagens")
-//          } catch (e: IntentSender.SendIntentException) {
-//            Log.i(TAG, "Failed to launch file chooser.")
-//          }
         })
   }
 
   private var mFolderDriveId: DriveId? = null
-  //
+
   private fun saveFileInDriveRootFolder(image: Bitmap?) {
 //
 //    val saveInDriveFolder = {
@@ -516,10 +439,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
             toast("Pasta não encontrada");
             createFolderInDrive()
           } else {
-            //usa ela
           }
-//
-          //          saveInDriveFolder()
         }
   }
 
@@ -539,16 +459,10 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   override fun onResume() {
     super.onResume()
     if (mGoogleApiClient == null) {
-      // Create the API client and bind it to an instance variable.
-      // We use this instance as the callback for connection and connection
-      // failures.
-      // Since no account name is passed, the user is prompted to choose.
       connectToGoogleDrive()
     } else {
       mGoogleApiClient!!.connect()
     }
-//    findFolderInDrive()
-//    restoreDriveId()
   }
 
   override fun onPause() {
@@ -564,9 +478,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
     when (requestCode) {
       ItemActivity.REQUEST_CODE_CAPTURE_IMAGE ->
-        // Called after a photo has been taken.
         if (resultCode == Activity.RESULT_OK) {
-          // Store the image data as a bitmap for writing later.
           mBitmapToSave = data?.extras?.get("data") as Bitmap
           imageFileName = getTimestamp() + ".jpg"
           saveBitmap(mBitmapToSave, getCompletePath(imageFileName))
@@ -574,13 +486,9 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
           reloadAdapter()
         }
       ItemActivity.REQUEST_CODE_CREATOR ->
-        // Called after a file is saved to Drive.
         if (resultCode == Activity.RESULT_OK) {
           Log.i(TAG, "Image successfully saved.")
           mBitmapToSave = null
-          // Just start the camera again for another photo.
-//          startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-//              REQUEST_CODE_CAPTURE_IMAGE)
         }
     }
   }
@@ -606,7 +514,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   }
 
   companion object {
-    //    private val TAG = "drive-quickstart"
     private val REQUEST_CODE_CAPTURE_IMAGE = 1
     private val REQUEST_CODE_CREATOR = 2
     private val REQUEST_CODE_RESOLUTION = 3
@@ -620,7 +527,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         .addOnConnectionFailedListener(this)
         .build()
 
-    // Connect the client. Once connected, the camera is launched.
     mGoogleApiClient!!.connect()
   }
 }
