@@ -20,11 +20,13 @@ import com.example.sergio.nota_agil.R
 import io.paperdb.Paper
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.onItemClick
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.util.*
 import kotlinx.android.synthetic.main.activity_navigation.button_new_category as buttonNewCategory
 import kotlinx.android.synthetic.main.activity_navigation.list_view_categories as listViewCategories
-
+import kotlinx.android.synthetic.main.activity_fast_actions.button_new_category as buttonNewCategoryInsideFast
+import kotlinx.android.synthetic.main.nav_header_navigation.imageView_home as imageViewHome
 
 class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,8 +42,7 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     setSupportActionBar(toolbar)
 
     val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
-    val toggle = ActionBarDrawerToggle(
-        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+    val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
     drawer.setDrawerListener(toggle)
     toggle.syncState()
 
@@ -53,13 +54,26 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     buttonNewCategory.onClick { createNewCategory() }
     registerForContextMenu(listViewCategories)
 
+    imageViewHome.onClick {
+      var fragmentTransaction: FragmentTransaction? = supportFragmentManager.beginTransaction()
+      val newFrag = FastActionsFragment()
+      fragmentTransaction?.replace(R.id.frame_layout, newFrag);
+      fragmentTransaction?.addToBackStack(null)
+      fragmentTransaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+      fragmentTransaction?.commit()
+
+      val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+      drawer.closeDrawer(GravityCompat.START)
+    }
+
+
     openfastActionsFragment()
   }
 
   private fun openfastActionsFragment() {
     var fragmentTransaction: FragmentTransaction? = supportFragmentManager.beginTransaction()
-    val newFrag = fastActionsFragment()
-    fragmentTransaction?.replace(R.id.frame_layout, newFrag);
+    val newFrag = FastActionsFragment()
+    fragmentTransaction?.replace(R.id.frame_layout, newFrag)
     fragmentTransaction?.addToBackStack(null)
     fragmentTransaction?.commit()
   }
@@ -117,8 +131,20 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     val id = item.itemId
     if (id == R.id.action_settings) {
+      startActivity<AboutActivity>()
       return true
     }
+    if (id == R.id.action_clean) {
+      AlertDialog.Builder(this)
+          .setTitle("Deseja apagar o todo o conteúdo ?")
+          .setPositiveButton("Sim") { _, _->
+            toast("Realizada Limpeza da memória")
+          }
+          .setNegativeButton("Não") { _, _ ->
+          }.show()
+      return true
+    }
+
     return super.onOptionsItemSelected(item)
   }
 

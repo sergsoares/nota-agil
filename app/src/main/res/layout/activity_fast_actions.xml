@@ -9,49 +9,82 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
-        android:orientation="horizontal">
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/button_new_category"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Criar nova categoria"
-            android:layout_weight="0.5"
-            android:textColor="#000"
-            android:layout_marginRight="2dp"
-            android:background="@color/colorSecondaryDark"/>
+        android:orientation="vertical"
+        android:layout_margin="2dp"
+        >
+        <!--<android.support.v7.widget.AppCompatButton-->
+            <!--android:id="@+id/button_new_category"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Criar categoria"-->
+            <!--android:radius="40dp"-->
+            <!--android:drawableLeft="@mipmap/ic_create"-->
+            <!--android:drawablePadding="0dp"-->
+            <!--android:layout_weight="0.5"-->
+            <!--android:textColor="#FFF"-->
+            <!--android:textSize="26dp"-->
+            <!--android:layout_margin="2dp"-->
+            <!--android:background="@color/colorAccent"/>-->
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/button_search_item"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Pesquisar Item"
-            android:layout_weight="0.5"
-            android:textColor="#000"
-            android:layout_marginLeft="2dp"
-            android:background="@color/colorSecondaryDark"/>
+            android:gravity="center_horizontal|center"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:layout_margin="2dp"
+            android:layout_weight="0.5">
+            <TextView
+                android:id="@+id/button_new_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:clickable="true"
+                android:drawableTop="@mipmap/ic_create"
+                android:text="Criar categoria"
+                android:textAllCaps="true"
+                android:textAlignment="center"
+                android:textColor="#FFF"
+                android:textSize="32dp"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal|center"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:layout_margin="2dp"
+            android:layout_weight="0.5">
+            <TextView
+                android:id="@+id/button_search_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:clickable="true"
+                android:drawableTop="@mipmap/ic_search"
+                android:text="Pesquisar Item"
+                android:textAllCaps="true"
+                android:textAlignment="center"
+                android:textColor="#FFF"
+                android:textSize="32dp"
+                />
+        </RelativeLayout>
+
+        <!--<android.support.v7.widget.AppCompatButton-->
+            <!--android:id="@+id/button_search_item"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:drawableTop="@mipmap/ic_search"-->
+            <!--android:text="Pesquisar Item"-->
+            <!--android:radius="10dp"-->
+            <!--android:layout_weight="0.5"-->
+            <!--android:textColor="#FFF"-->
+            <!--android:textSize="26dp"-->
+            <!--android:layout_margin="2dp"-->
+            <!--android:background="@color/colorAccent"/>-->
 
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.5"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/button_last_item"
-            android:text="Ultimo Item"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"/>
-        <Button
-            android:id="@+id/button_whatever"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"/>
-
-    </LinearLayout>
-
 
 
 </LinearLayout>

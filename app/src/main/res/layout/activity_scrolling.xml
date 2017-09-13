@@ -6,12 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.sergio.nota_agil.activity.ScrollingActivity">
 
     <android.support.design.widget.AppBarLayout
-            android:id="@+id/app_bar"
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
+        android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -21,29 +22,118 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="enterAlwaysCollapsed">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                app:contentScrim="?attr/colorPrimaryDark"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
 
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="10dp"
+                    android:text="Proposta de TCC"
+                    android:textColor="#FFF"
+                    android:textSize="24sp"
+                    />
+            </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_scrolling"/>
+    <include
+        android:id="@+id/layout_content"
+        layout="@layout/content_scrolling"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_popup_sync"/>
+    <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:layout_anchor="@id/app_bar"-->
+        <!--android:layout_marginLeft="60dp"-->
+        <!--android:layout_marginTop="60dp"-->
+        <!--app:layout_anchorGravity="center_vertical">-->
 
+        <!--<TextView-->
+            <!--android:id="@+id/text_view_item_status"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:text="10 Total de Itens "-->
+            <!--android:textColor="#FFF"-->
+            <!--android:textSize="14sp"-->
+            <!--/>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:text="10 Total de Aúdios "-->
+            <!--android:textColor="#FFF"-->
+            <!--android:textSize="14sp"-->
+            <!--/>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:text="10 Total de Imagens"-->
+            <!--android:textColor="#FFF"-->
+            <!--android:textSize="14sp"-->
+            <!--/>-->
+    <!--</LinearLayout>-->
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/floatingMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true"
+        fab:menu_fab_label="Cancelar"
+        fab:menu_backgroundColor="#ccffffff"
+        fab:menu_animationDelayPerItem="0"
+        fab:menu_colorNormal="#00C29F"
+        fab:menu_colorPressed="#00C29F"
+        fab:menu_colorRipple="#00efc4"
+        android:padding="16dp">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_take_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_camera_white"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorPrimary"
+            fab:fab_colorRipple="@color/colorPrimary"
+            fab:fab_size="normal"
+            fab:fab_label="Tirar Foto"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_record_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_mic_white"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorPrimary"
+            fab:fab_colorRipple="@color/colorPrimary"
+            fab:fab_size="normal"
+            fab:fab_label="Gravar Áudio"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_take_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_notation"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorPrimary"
+            fab:fab_colorRipple="@color/colorPrimary"
+            fab:fab_size="normal"
+            fab:fab_label="Anotações"/>
+
+    </com.github.clans.fab.FloatingActionMenu>
 
 
 </android.support.design.widget.CoordinatorLayout>

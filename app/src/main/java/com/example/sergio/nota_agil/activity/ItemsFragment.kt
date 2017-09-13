@@ -12,6 +12,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import com.example.sergio.nota_agil.R
+import com.github.clans.fab.FloatingActionMenu
 import io.paperdb.Paper
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.onItemClick
@@ -39,9 +40,8 @@ class ItemsFragment : Fragment() {
     Paper.init(context)
     reloadAdapter()
 
-    buttonNewItem.onClick {
+    buttonNewItem.setOnMenuButtonClickListener {
       createNewItem()
-
     }
 
     itensListView.onItemClick { adapterView, view, i, l ->

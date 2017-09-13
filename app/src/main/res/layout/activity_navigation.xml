@@ -37,8 +37,8 @@
                 android:layout_height="wrap_content"
                 android:text="Criar Nova Categoria"
                 android:textColor="#FFF"
-                android:background="@color/colorBackground"
-                app:backgroundTint="@color/colorAccent"/>
+                android:background="@color/colorSecondaryDark"
+                app:backgroundTint="@color/colorSecondaryDark"/>
             <!--<Button-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="wrap_content"-->

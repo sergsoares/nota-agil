@@ -35,11 +35,12 @@ class SearchFragment : Fragment() {
     
     searchViewItems.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
       override fun onQueryTextSubmit(query: String): Boolean {
-        adapter.getFilter().filter(query)
         return false
       }
 
       override fun onQueryTextChange(newText: String): Boolean {
+        adapter.filter.filter(newText)
+
         return false
       }
     })

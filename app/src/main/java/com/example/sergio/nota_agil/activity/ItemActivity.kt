@@ -13,15 +13,22 @@ import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.provider.MediaStore
+import android.support.design.widget.AppBarLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
+import android.support.design.widget.TabLayout
+import android.support.design.widget.TabLayout.OnTabSelectedListener
 import android.support.v4.app.ActivityCompat
+import android.support.v4.view.GravityCompat
+import android.support.v4.view.ViewCompat
+import android.support.v4.view.ViewPager
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.text.InputFilter
 import android.util.Log
-import android.view.ContextMenu
-import android.view.View
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -33,7 +40,12 @@ import com.google.android.gms.drive.Drive
 import com.google.android.gms.drive.DriveApi
 import com.google.android.gms.drive.DriveId
 import com.google.android.gms.drive.MetadataChangeSet
+import com.google.common.base.Predicates
+import com.google.common.collect.Collections2
+import com.google.common.collect.Lists
+import com.google.common.io.Files
 import io.paperdb.Paper
+import kotlinx.android.synthetic.main.activity_scrolling.*
 import org.apache.commons.io.FileUtils
 import org.jetbrains.anko.onItemClick
 import org.jetbrains.anko.toast
@@ -41,10 +53,12 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import kotlinx.android.synthetic.main.activity_scrolling.app_bar as appBarLayout
-import kotlinx.android.synthetic.main.content_scrolling.button_record as buttonRecord
-import kotlinx.android.synthetic.main.content_scrolling.button_stop_record as buttonStopRecord
-import kotlinx.android.synthetic.main.content_scrolling.button_take_photo as buttonTakePhoto
+import kotlinx.android.synthetic.main.activity_scrolling.fab_record_audio as buttonRecord
+//import kotlinx.android.synthetic.main.content_scrolling.button_stop_record as buttonStopRecord
+import kotlinx.android.synthetic.main.activity_scrolling.fab_take_photo as buttonTakePhoto
+import kotlinx.android.synthetic.main.activity_scrolling.fab_take_notes as buttonTakeNotes
 import kotlinx.android.synthetic.main.content_scrolling.list_view_files as listViewFiles
+import kotlinx.android.synthetic.main.content_scrolling.sliding_tabs as tabLayout
 
 class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -53,6 +67,8 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   private val TAG = "ItemActivity"
   private var mMediaRecorder: MediaRecorder? = null
   private var mMediaPlayer: MediaPlayer? = null
+
+  private var adapter: ArrayAdapter<String>? = null
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -66,22 +82,41 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
 
     setContentView(com.example.sergio.nota_agil.R.layout.activity_scrolling)
-    val toolbar = findViewById(com.example.sergio.nota_agil.R.id.toolbar) as Toolbar
-    setSupportActionBar(toolbar)
 
-    val fab = findViewById(com.example.sergio.nota_agil.R.id.fab) as FloatingActionButton
-    fab.setOnClickListener { view ->
-      val itemsList = fetchItem()
-      for(item in itemsList ){
-        saveFileToDrive(item)
-      }
-      Snackbar.make(view, "Sincronização iniciada", Snackbar.LENGTH_LONG)
-          .setAction("Action", null).show()
-    }
+    val toolbar = findViewById(R.id.toolbar) as Toolbar
+    setSupportActionBar(toolbar)
+    supportActionBar?.setDisplayHomeAsUpEnabled(true);
+
+
+//    val tabLayout = findViewById(R.id.sliding_tabs) as TabLayout
+    tabLayout.addTab(tabLayout.newTab().setText("Fotos"));
+    tabLayout.addTab(tabLayout.newTab().setText("Áudios"));
+    tabLayout.addTab(tabLayout.newTab().setText("Anotações"));
+
+//    val fab = findViewById(com.example.sergio.nota_agil.R.id.fab) as FloatingActionButton
+//    fab.setOnClickListener { view ->
+//      val itemsList = fetchItem()
+//      for(item in itemsList ){
+//        saveFileToDrive(item)
+//      }
+//      Snackbar.make(view, "Sincronização iniciada", Snackbar.LENGTH_LONG)
+//          .setAction("Action", null).show()
+//    }
 
     CATEGORY = intent.getStringExtra("category")
     ITEM = intent.getStringExtra("item")
-    title = ITEM
+
+    toolbar_title.text = ITEM
+//    supportActionBar?.title = ITEM
+
+//    var mListener = AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+//      if (toolbar_layout.getHeight() + verticalOffset < 2 * ViewCompat.getMinimumHeight(toolbar_layout)) {
+//        text_view_item_status.animate().alpha(1F).setDuration(600)
+//      } else {
+//        text_view_item_status.animate().alpha(0F).setDuration(600)
+//      }
+//    }
+//    appBarLayout.addOnOffsetChangedListener(mListener)
 
     isRecordPermissionGranted()
     isStoragePermissionGranted()
@@ -90,6 +125,55 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     registerForContextMenu(listViewFiles)
     saveLastItemVisited()
 
+    tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+      override fun onTabSelected(tab: TabLayout.Tab){
+        defineFilterByPosition(tab.position)
+      }
+      override fun onTabUnselected(tab: TabLayout.Tab){  }
+      override fun onTabReselected(tab: TabLayout.Tab){ }
+    })
+
+  }
+
+  private fun defineFilterByPosition(id: Int) {
+    if (id === 0) {
+      filterContentBy(".jpg")
+    } else if (id === 1) {
+      filterContentBy(".3gp")
+    } else if (id === 2) {
+      filterContentBy(".txt")
+    }
+  }
+
+  private fun filterContentBy(pattern: String?) {
+    val filesList = fetchItem()
+    val filtered = Lists.newArrayList(Collections2.filter(filesList,
+        Predicates.containsPattern(pattern)))
+
+    listViewFiles.adapter = ArrayAdapter<String>(baseContext, android.R.layout.simple_list_item_1, filtered)
+  }
+
+  override fun onSupportNavigateUp(): Boolean {
+    finish()
+    return true
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    menuInflater.inflate(R.menu.menu_scrolling, menu)
+    return true
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    val id = item.itemId
+    if (id == R.id.action_settings) {
+      val itemsList = fetchItem()
+      for(item in itemsList ){
+        saveFileToDrive(item)
+      }
+      toast("Sincronização iniciada")
+      return true
+    }
+    return super.onOptionsItemSelected(item)
   }
 
   private fun saveLastItemVisited() {
@@ -102,24 +186,23 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   }
 
   private fun setListeners() {
-    buttonRecord.setOnClickListener { view ->
-      startRecord()
-      buttonRecord.visibility = View.GONE
-      buttonStopRecord?.visibility = View.VISIBLE
-
-      Snackbar.make(view, "Gravação iniciada.", Snackbar.LENGTH_LONG)
-          .setAction("Action", null).show()
-
-    }
-
-    buttonStopRecord.setOnClickListener { view ->
-      stopRecord()
-      buttonRecord?.visibility = View.VISIBLE
-      buttonStopRecord?.visibility = View.GONE
-
-      Snackbar.make(view, "Gravação encerrada.", Snackbar.LENGTH_LONG)
-          .setAction("Action", null).show()
-    }
+    buttonRecord.setOnTouchListener(object: View.OnTouchListener {
+      override fun onTouch(view:View, event: MotionEvent):Boolean {
+        when (event.action) {
+          MotionEvent.ACTION_DOWN -> {
+            startRecord()
+            Snackbar.make(view, "Gravação iniciada.", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+          }
+          MotionEvent.ACTION_UP -> {
+            stopRecord()
+            Snackbar.make(view, "Gravação encerrada.", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+          }
+        }
+        return false
+      }
+    })
 
     buttonTakePhoto.setOnClickListener { view ->
       Snackbar.make(view, "Camera Iniciada.", Snackbar.LENGTH_LONG)
@@ -128,8 +211,28 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
           REQUEST_CODE_CAPTURE_IMAGE)
     }
 
+    buttonTakeNotes.setOnClickListener { view ->
+      val input = EditText(this)
+      input.minLines = 5
+
+      AlertDialog.Builder(this)
+          .setView(input)
+          .setTitle("Insira anotação")
+          .setPositiveButton("OK") { _, _ ->
+            val newText = input.text.toString()
+            val txtFileName = getTimestamp() + ".txt"
+            val path = getCompletePath(txtFileName)
+            val file = File(path)
+            FileUtils.writeStringToFile(file, newText)
+            saveFile(txtFileName)
+            reloadAdapter()
+          }.show()
+
+    }
+
     listViewFiles.onItemClick { adapterView, view, i, l ->
-      executeMedia(fetchItem()[i])
+      val fileName = listViewFiles.adapter.getItem(i).toString()
+      executeMedia(fileName)
     }
 
   }
@@ -208,14 +311,43 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         e.printStackTrace()
       }
     }
+
+    if (itemName.endsWith(".txt")) {
+      val path = getCompletePath(itemName)
+      val file = File(path)
+      val input = EditText(this)
+      input.minLines = 5
+      input.text.insert(0, FileUtils.readFileToString(file))
+
+      AlertDialog.Builder(this)
+          .setView(input)
+          .setTitle("Alterações na nota")
+          .setPositiveButton("OK") { _, _ ->
+
+            val allCategories = fetchItem()
+            allCategories.remove(itemName)
+            Paper.book(CATEGORY).write(ITEM, allCategories)
+            val newText = input.text.toString()
+            FileUtils.forceDelete(file)
+            FileUtils.writeStringToFile(file, newText)
+            saveFile(itemName)
+            reloadAdapter()
+
+          }.setNegativeButton("Cancelar") { _, _ ->}.show()
+    }
   }
 
 
   private fun fetchItem(): ArrayList<String> = Paper.book(CATEGORY).read(ITEM)
 
-  private fun reloadAdapter() {
-    val adapter = ArrayAdapter<String>(this, R.layout.custom_layout_item, R.id.category_text_view, fetchItem())
-    listViewFiles.adapter = adapter
+  private fun reloadAdapter(){
+
+    defineFilterByPosition(tabLayout.selectedTabPosition)
+
+//    adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fetchItem())
+//    listViewFiles.adapter = adapter
+
+//    return adapter as ArrayAdapter<String>
   }
 
   override fun onCreateContextMenu(
@@ -253,6 +385,9 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       if (fileClicked.endsWith(".jpg")) {
         type = ".jpg"
       }
+      if (fileClicked.endsWith(".txt")) {
+        type = ".txt"
+      }
 
       AlertDialog.Builder(this)
           .setView(input)
@@ -262,7 +397,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
             allCategories.remove(fileClicked)
             val newFileName = input.text.toString().plus(type)
             allCategories.add(newFileName)
-            //TODO: Rename File
 
             val oldFile = File(getCompletePath(fileClicked))
             val newFile = File(getCompletePath(newFileName))
@@ -328,10 +462,10 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    if (grantResults?.get(0) == PackageManager.PERMISSION_GRANTED) {
       Log.v(TAG, "Permission: " + permissions[0] + " was " + grantResults[0])
     }
-  }
+    }
 
   override fun onConnectionSuspended(cause: Int) {
     Log.i(TAG, "GoogleApiClient connection suspended")
@@ -510,7 +644,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 //    if (!result.hasResolution()) {
 //      // show the localized error dialog.
 //      GoogleApiAvailability.getInstance().getErrorDialog(this, result.errorCode, 0).show()
-//      return
+//      returnv3
 //    }
 //    // The failure has a resolution. Resolve it.
 //    // Called typically when the app is not yet authorized, and an

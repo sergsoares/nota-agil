@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-                <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content">-->
-    <!---->
-<!--<android.support.v4.widget.NestedScrollView-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:isScrollContainer="false"-->
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-    <!--android:clickable="false"-->
-    <!--tools:showIn="@layout/activity_scrolling">-->
-
         <LinearLayout
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,117 +8,24 @@
             tools:showIn="@layout/activity_scrolling"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="30dp"
             android:isScrollContainer="true"
             android:orientation="vertical"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:background="#E9E9E9">
 
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                        <android.support.v7.widget.AppCompatImageButton
-                            android:id="@+id/button_record"
+                        <android.support.design.widget.TabLayout
+                            android:id="@+id/sliding_tabs"
+                            app:tabGravity="fill"
                             android:layout_width="match_parent"
+                            android:background="#fff"
                             android:layout_height="wrap_content"
-                            android:text="Gravar Audio"
-                            android:src="@mipmap/ic_mic"
-                            android:layout_weight="0.5"
-                            android:textColor="#FFF"
-                            android:background="@color/colorBackground"
-                            app:backgroundTint="@color/colorAccent"/>
+                            app:tabMode="fixed" />
 
-                        <!--<Button-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="Gravar Audio"-->
-                        <!--android:id="@+id/button_record"/>-->
-
-                        <android.support.v7.widget.AppCompatButton
-                            android:id="@+id/button_stop_record"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Parar Gravacão"
-                            android:layout_weight="0.5"
-                            android:visibility="gone"
-                            android:textColor="#FFF"
-                            android:background="@color/colorBackground"
-                            app:backgroundTint="@color/colorAccent"/>
-
-                        <!--<Button-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="Parar Gravacão"-->
-                        <!--android:visibility="gone"-->
-                        <!--android:id="@+id/button_stop_record"/>-->
-
-                        <!--<android.support.v7.widget.AppCompatButton-->
-                            <!--android:id="@+id/button_send_to_gdrive"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_weight="0.5"-->
-                            <!--android:text="Google Drive"-->
-                            <!--android:textColor="#FFF"-->
-                            <!--android:background="@color/colorBackground"-->
-                            <!--app:backgroundTint="@color/colorAccent"/>-->
-
-                        <!--<Button-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="Send last Image to Google Drive"-->
-                            <!--android:id="@+id/button_send_to_gdrive"/>-->
-
-                        <android.support.v7.widget.AppCompatImageButton
-                            android:layout_marginLeft="1dp"
-                            android:id="@+id/button_take_photo"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Tirar Foto"
-                            android:src="@mipmap/ic_camera"
-                            android:layout_weight="0.5"
-                            android:textColor="#FFF"
-                            android:background="@color/colorBackground"
-                            app:backgroundTint="@color/colorAccent"/>
-
-                </LinearLayout>
-                <!--<Button-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="Tirar Foto"-->
-                    <!--android:id="@+id/button_take_photo"/>-->
-
-                <!--<android.support.v4.widget.NestedScrollView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content">-->
                         <ListView
-                            android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/list_view_files"
+                            android:background="#fff"
                             />
 
-                <!--</android.support.v4.widget.NestedScrollView>-->
-                <!--<ScrollView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:nestedScrollingEnabled="true">-->
-                        <!---->
-
-                <!--</ScrollView>-->
-
-
-                <!--<TextView-->
-                    <!--android:id="@+id/textView2"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_margin="@dimen/text_margin"-->
-                    <!--android:text="@string/large_text"/>-->
         </LinearLayout>
-
-
-
-<!--</android.support.v4.widget.NestedScrollView>-->
-
-<!--</RelativeLayout>-->
