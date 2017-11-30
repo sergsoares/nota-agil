@@ -1,9 +1,6 @@
-package com.example.sergio.nota_agil.activity
+package com.example.sergio.nota_agil.activity.fragments
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AlertDialog
@@ -16,8 +13,6 @@ import com.example.sergio.nota_agil.R
 import io.paperdb.Paper
 import kotlinx.android.synthetic.main.activity_navigation.*
 import org.jetbrains.anko.onClick
-import org.jetbrains.anko.support.v4.toast
-import org.jetbrains.anko.toast
 
 import kotlinx.android.synthetic.main.activity_fast_actions.button_new_category as buttonNewCategory
 import kotlinx.android.synthetic.main.activity_fast_actions.button_search_item as buttonSearchItem

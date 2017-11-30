@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Light">
         <activity
-            android:name=".activity.NavigationActivity"
+            android:name=".activity.activities.NavigationActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -22,17 +22,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ScrollingActivity"
+            android:name=".activity.activities.ScrollingActivity"
             android:label="@string/title_activity_scrolling"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".activity.ItemActivity"
+            android:name=".activity.activities.ItemActivity"
             android:label="@string/title_activity_scrolling"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".activity.GoogleDriveActivity"/>
-        <activity android:name=".activity.AboutActivity"
+        <activity android:name=".activity.activities.AboutActivity"
                   android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

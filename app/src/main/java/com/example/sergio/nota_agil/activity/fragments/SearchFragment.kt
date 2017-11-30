@@ -1,4 +1,4 @@
-package com.example.sergio.nota_agil.activity
+package com.example.sergio.nota_agil.activity.fragments
 
 import android.R
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.SearchView
+import com.example.sergio.nota_agil.activity.activities.ItemActivity
 import io.paperdb.Paper
 import org.jetbrains.anko.onItemClick
 import kotlinx.android.synthetic.main.search_fragment.list_view_fetched_cards as listViewItems

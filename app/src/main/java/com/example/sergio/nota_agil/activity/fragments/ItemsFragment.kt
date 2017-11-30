@@ -1,4 +1,4 @@
-package com.example.sergio.nota_agil.activity
+package com.example.sergio.nota_agil.activity.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,9 +12,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import com.example.sergio.nota_agil.R
-import com.github.clans.fab.FloatingActionMenu
+import com.example.sergio.nota_agil.activity.activities.ItemActivity
 import io.paperdb.Paper
-import org.jetbrains.anko.onClick
 import org.jetbrains.anko.onItemClick
 import java.io.File
 import java.util.*

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.sergio.nota_agil.activity.ScrollingActivity">
+    tools:context="com.example.sergio.nota_agil.activity.activities.ScrollingActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"

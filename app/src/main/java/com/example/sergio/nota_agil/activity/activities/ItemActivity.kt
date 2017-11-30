@@ -1,4 +1,4 @@
-package com.example.sergio.nota_agil.activity
+package com.example.sergio.nota_agil.activity.activities
 
 import android.Manifest
 import android.app.Activity
@@ -206,7 +206,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       Snackbar.make(view, "Camera Iniciada.", Snackbar.LENGTH_LONG)
           .setAction("Action", null).show()
       startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-          REQUEST_CODE_CAPTURE_IMAGE)
+              REQUEST_CODE_CAPTURE_IMAGE)
     }
 
     buttonTakeNotes.setOnClickListener { view ->
@@ -628,7 +628,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
     when (requestCode) {
-      ItemActivity.REQUEST_CODE_CAPTURE_IMAGE ->
+      REQUEST_CODE_CAPTURE_IMAGE ->
         if (resultCode == Activity.RESULT_OK) {
           mBitmapToSave = data?.extras?.get("data") as Bitmap
           imageFileName = getTimestamp() + ".jpg"
@@ -636,7 +636,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
           saveFile(imageFileName)
           reloadAdapter()
         }
-      ItemActivity.REQUEST_CODE_CREATOR ->
+      REQUEST_CODE_CREATOR ->
         if (resultCode == Activity.RESULT_OK) {
           Log.i(TAG, "Image successfully saved.")
           mBitmapToSave = null

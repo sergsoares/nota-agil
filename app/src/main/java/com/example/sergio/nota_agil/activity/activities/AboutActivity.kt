@@ -1,4 +1,4 @@
-package com.example.sergio.nota_agil.activity
+package com.example.sergio.nota_agil.activity.activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle

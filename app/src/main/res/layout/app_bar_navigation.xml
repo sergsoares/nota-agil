@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sergio.nota_agil.activity.NavigationActivity">
+    tools:context="com.example.sergio.nota_agil.activity.activities.NavigationActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
