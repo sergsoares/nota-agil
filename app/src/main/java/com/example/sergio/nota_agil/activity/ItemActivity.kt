@@ -13,20 +13,12 @@ import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.provider.MediaStore
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
-import android.support.design.widget.TabLayout.OnTabSelectedListener
 import android.support.v4.app.ActivityCompat
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.ViewCompat
-import android.support.v4.view.ViewPager
-import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.text.InputFilter
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
@@ -43,7 +35,6 @@ import com.google.android.gms.drive.MetadataChangeSet
 import com.google.common.base.Predicates
 import com.google.common.collect.Collections2
 import com.google.common.collect.Lists
-import com.google.common.io.Files
 import io.paperdb.Paper
 import kotlinx.android.synthetic.main.activity_scrolling.*
 import org.apache.commons.io.FileUtils
@@ -136,21 +127,28 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   }
 
   private fun defineFilterByPosition(id: Int) {
+    val filesList = fetchItem()
+
+    val jpgFiltered = Lists.newArrayList(Collections2.filter(filesList,
+            Predicates.containsPattern(".jpg")))
+
+    val audioFiltered = Lists.newArrayList(Collections2.filter(filesList,
+            Predicates.containsPattern(".3gp")))
+
+    val textFiltered = Lists.newArrayList(Collections2.filter(filesList,
+            Predicates.containsPattern(".txt")))
+
     if (id === 0) {
-      filterContentBy(".jpg")
+      filterContentBy(jpgFiltered)
     } else if (id === 1) {
-      filterContentBy(".3gp")
+      filterContentBy(audioFiltered)
     } else if (id === 2) {
-      filterContentBy(".txt")
+      filterContentBy(textFiltered)
     }
   }
 
-  private fun filterContentBy(pattern: String?) {
-    val filesList = fetchItem()
-    val filtered = Lists.newArrayList(Collections2.filter(filesList,
-        Predicates.containsPattern(pattern)))
-
-    listViewFiles.adapter = ArrayAdapter<String>(baseContext, android.R.layout.simple_list_item_1, filtered)
+  private fun filterContentBy(pattern: java.util.ArrayList<String>) {
+    listViewFiles.adapter = ArrayAdapter<String>(baseContext, android.R.layout.simple_list_item_1, pattern)
   }
 
   override fun onSupportNavigateUp(): Boolean {
@@ -234,6 +232,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       val fileName = listViewFiles.adapter.getItem(i).toString()
       executeMedia(fileName)
     }
+
 
   }
 
@@ -357,7 +356,8 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
     val allCategories = fetchItem()
     val info = menuInfo as AdapterView.AdapterContextMenuInfo
-    val fileClicked = allCategories[info.position]
+//    val fileClicked = allCategories[info.position]
+    val fileClicked = listViewFiles.getItemAtPosition(info.position).toString()
 
 
     menu.add("Deletar").setOnMenuItemClickListener {
@@ -392,11 +392,15 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       AlertDialog.Builder(this)
           .setView(input)
           .setTitle("Insira novo nome")
-          .setPositiveButton("OK") { _, _ ->
+          .setPositiveButton("OK") { _ , _ ->
 
-            allCategories.remove(fileClicked)
+
             val newFileName = input.text.toString().plus(type)
-            allCategories.add(newFileName)
+
+            if(newFileName.isEmpty() || allCategories.contains(newFileName)){
+              toast("Arquivo já existe renomeado.")
+              return@setPositiveButton
+            }
 
             val oldFile = File(getCompletePath(fileClicked))
             val newFile = File(getCompletePath(newFileName))
@@ -404,6 +408,8 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
             Log.e(TAG, "NewFile is in " + getCompletePath(newFileName))
 
             if (oldFile.renameTo(newFile)){
+              allCategories.remove(fileClicked)
+              allCategories.add(newFileName)
               toast("Arquivo Renomeado.")
             } else {
               toast("Arquivo não pode ser renomeado.");

@@ -85,28 +85,40 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         .setTitle("Criar Nova Categoria")
         .setPositiveButton("OK") { _, _ ->
           val newCategoryName = input.text.toString()
+
+          if (Paper.book().allKeys.contains(newCategoryName) || newCategoryName.isEmpty()) {
+            toast("Nome de categoria inválido.")
+            return@setPositiveButton
+          }
+
           Paper.book(newCategoryName)
           Paper.book().write(newCategoryName, newCategoryName)
           reloadAdapter()
+
+          goToItemsFragment(newCategoryName)
         }.show();
   }
 
   private fun putItemsFragment() {
     listViewCategories!!.onItemClick { adapterView, view, i, l ->
-      var fragmentTransaction: FragmentTransaction? = supportFragmentManager.beginTransaction()
-      val bundle = Bundle()
-      bundle.putString("category", Paper.book().allKeys[i])
-      val newFrag = ItemsFragment()
-      newFrag.arguments = bundle
-
-      fragmentTransaction?.replace(R.id.frame_layout, newFrag);
-      fragmentTransaction?.addToBackStack(null)
-      fragmentTransaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
-      fragmentTransaction?.commit()
-
-      val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
-      drawer.closeDrawer(GravityCompat.START)
+      goToItemsFragment(Paper.book().allKeys[i])
     }
+  }
+
+  private fun goToItemsFragment(category: String) {
+    var fragmentTransaction: FragmentTransaction? = supportFragmentManager.beginTransaction()
+    val bundle = Bundle()
+    bundle.putString("category", category)
+    val newFrag = ItemsFragment()
+    newFrag.arguments = bundle
+
+    fragmentTransaction?.replace(R.id.frame_layout, newFrag);
+    fragmentTransaction?.addToBackStack(null)
+    fragmentTransaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+    fragmentTransaction?.commit()
+
+    val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+    drawer.closeDrawer(GravityCompat.START)
   }
 
   private fun reloadAdapter(){
@@ -138,7 +150,9 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
       AlertDialog.Builder(this)
           .setTitle("Deseja apagar o todo o conteúdo ?")
           .setPositiveButton("Sim") { _, _->
+            Paper.book().destroy();
             toast("Realizada Limpeza da memória")
+            startActivity<NavigationActivity>()
           }
           .setNegativeButton("Não") { _, _ ->
           }.show()
@@ -159,6 +173,9 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
       Paper.book(categoryClicked).destroy()
       toast("Categoria Deletada")
       reloadAdapter()
+
+      openfastActionsFragment()
+
       false
     }
 
@@ -173,6 +190,11 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             val arrayListTemp = Paper.book(categoryClicked).allKeys
             val newName = input.text.toString()
 
+            if (Paper.book().allKeys.contains(newName) || newName.isEmpty()) {
+              toast("Nome de categoria inválido.")
+              return@setPositiveButton
+            }
+
             Paper.book(newName)
             Paper.book().write(newName, newName)
 
@@ -184,6 +206,9 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             Paper.book().delete(categoryClicked)
             Paper.book(categoryClicked).destroy()
             reloadAdapter()
+
+            goToItemsFragment(newName)
+
           }.show();
 
       false

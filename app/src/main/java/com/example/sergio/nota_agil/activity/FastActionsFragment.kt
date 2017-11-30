@@ -17,6 +17,7 @@ import io.paperdb.Paper
 import kotlinx.android.synthetic.main.activity_navigation.*
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.support.v4.toast
+import org.jetbrains.anko.toast
 
 import kotlinx.android.synthetic.main.activity_fast_actions.button_new_category as buttonNewCategory
 import kotlinx.android.synthetic.main.activity_fast_actions.button_search_item as buttonSearchItem
@@ -66,9 +67,13 @@ class FastActionsFragment : Fragment() {
     val dialog = AlertDialog.Builder(context)
          .setView(input)
           .setTitle("Criar Nova Categoria")
-
           dialog.setPositiveButton("OK") { _, _ ->
+
           val newCategoryName = input.text.toString()
+
+          if (Paper.book().allKeys.contains(newCategoryName) || newCategoryName.isEmpty()) {
+              return@setPositiveButton
+          }
 
           Paper.book(newCategoryName)
           Paper.book().write(newCategoryName, newCategoryName)
@@ -80,13 +85,14 @@ class FastActionsFragment : Fragment() {
           val newFrag = ItemsFragment()
           newFrag.arguments = bundle
 
-          val adapterCategories = ArrayAdapter<String>(context, R.layout.categories_navigation, R.id.category_text_view ,Paper.book().allKeys)
+          val adapterCategories = ArrayAdapter<String>(context, R.layout.categories_navigation, R.id.category_text_view, Paper.book().allKeys)
           activity.list_view_categories.adapter = adapterCategories
 
           fragmentTransaction?.replace(R.id.frame_layout, newFrag);
           fragmentTransaction?.addToBackStack(null)
           fragmentTransaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
           fragmentTransaction?.commit()
+
 
         }.show();
 
