@@ -15,6 +15,8 @@ import com.example.sergio.nota_agil.R
 import com.example.sergio.nota_agil.activity.activities.ItemActivity
 import io.paperdb.Paper
 import org.jetbrains.anko.onItemClick
+import org.jetbrains.anko.support.v4.toast
+import org.jetbrains.anko.toast
 import java.io.File
 import java.util.*
 import kotlinx.android.synthetic.main.items_fragment.button_new_item as buttonNewItem
@@ -103,7 +105,15 @@ class ItemsFragment : Fragment() {
           .setView(input)
           .setTitle("Insira novo nome")
           .setPositiveButton("OK") { _, _ ->
+
+            val newName = input.text.toString()
             val arrayListTemp = Paper.book(CATEGORY).read<ArrayList<String>>(itemClicked)
+
+            if (arrayListTemp.contains(newName) || newName.isEmpty()) {
+              toast("Nome de item inválido.")
+              return@setPositiveButton
+            }
+
             Paper.book(CATEGORY).write(input.text.toString(), arrayListTemp)
             Paper.book(CATEGORY).delete(itemClicked)
             reloadAdapter()

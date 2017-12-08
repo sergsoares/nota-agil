@@ -68,7 +68,6 @@ class NavigationActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
       drawer.closeDrawer(GravityCompat.START)
     }
 
-
     openfastActionsFragment()
   }
 

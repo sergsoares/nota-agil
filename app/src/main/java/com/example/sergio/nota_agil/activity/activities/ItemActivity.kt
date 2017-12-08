@@ -375,6 +375,18 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       false
     }
 
+    menu.add("Compartilhar").setOnMenuItemClickListener {
+
+      fileClicked
+
+      val sendIntent = Intent()
+      sendIntent.action = Intent.ACTION_SEND
+      sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
+      sendIntent.type = "text/plain"
+      startActivity(Intent.createChooser(sendIntent, "Envie seus dados."))
+      false
+    }
+
     menu.add("Renomear").setOnMenuItemClickListener {
       val input = EditText(this)
 
@@ -486,7 +498,8 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         try {
           outputStream = FileOutputStream(path)
 
-          bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream) // bitmap is your Bitmap instance, if you want to compress it you can compress reduce percentage
+          bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+          // bitmap is your Bitmap instance, if you want to compress it you can compress reduce percentage
           // PNG is a lossless format, the compression factor (100) is ignored
         } catch (e: Exception) {
           e.printStackTrace()
