@@ -25,13 +25,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import com.example.sergio.nota_agil.R
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.ResultCallback
-import com.google.android.gms.drive.Drive
-import com.google.android.gms.drive.DriveApi
-import com.google.android.gms.drive.DriveId
-import com.google.android.gms.drive.MetadataChangeSet
 import com.google.common.base.Predicates
 import com.google.common.collect.Collections2
 import com.google.common.collect.Lists
@@ -45,21 +38,18 @@ import java.io.FileOutputStream
 import java.io.IOException
 import kotlinx.android.synthetic.main.activity_scrolling.app_bar as appBarLayout
 import kotlinx.android.synthetic.main.activity_scrolling.fab_record_audio as buttonRecord
-//import kotlinx.android.synthetic.main.content_scrolling.button_stop_record as buttonStopRecord
 import kotlinx.android.synthetic.main.activity_scrolling.fab_take_photo as buttonTakePhoto
 import kotlinx.android.synthetic.main.activity_scrolling.fab_take_notes as buttonTakeNotes
 import kotlinx.android.synthetic.main.content_scrolling.list_view_files as listViewFiles
 import kotlinx.android.synthetic.main.content_scrolling.sliding_tabs as tabLayout
 
-class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+class ItemActivity : AppCompatActivity() {
 
   private var CATEGORY: String = ""
   private var ITEM: String = ""
   private val TAG = "ItemActivity"
   private var mMediaRecorder: MediaRecorder? = null
   private var mMediaPlayer: MediaPlayer? = null
-
-  private var adapter: ArrayAdapter<String>? = null
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -78,36 +68,14 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     setSupportActionBar(toolbar)
     supportActionBar?.setDisplayHomeAsUpEnabled(true);
 
-
-//    val tabLayout = findViewById(R.id.sliding_tabs) as TabLayout
     tabLayout.addTab(tabLayout.newTab().setText("Fotos"));
     tabLayout.addTab(tabLayout.newTab().setText("Áudios"));
     tabLayout.addTab(tabLayout.newTab().setText("Anotações"));
-
-//    val fab = findViewById(com.example.sergio.nota_agil.R.id.fab) as FloatingActionButton
-//    fab.setOnClickListener { view ->
-//      val itemsList = fetchItem()
-//      for(item in itemsList ){
-//        saveFileToDrive(item)
-//      }
-//      Snackbar.make(view, "Sincronização iniciada", Snackbar.LENGTH_LONG)
-//          .setAction("Action", null).show()
-//    }
 
     CATEGORY = intent.getStringExtra("category")
     ITEM = intent.getStringExtra("item")
 
     toolbar_title.text = ITEM
-//    supportActionBar?.title = ITEM
-
-//    var mListener = AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-//      if (toolbar_layout.getHeight() + verticalOffset < 2 * ViewCompat.getMinimumHeight(toolbar_layout)) {
-//        text_view_item_status.animate().alpha(1F).setDuration(600)
-//      } else {
-//        text_view_item_status.animate().alpha(0F).setDuration(600)
-//      }
-//    }
-//    appBarLayout.addOnOffsetChangedListener(mListener)
 
     isRecordPermissionGranted()
     isStoragePermissionGranted()
@@ -157,21 +125,8 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    menuInflater.inflate(R.menu.menu_scrolling, menu)
+//    menuInflater.inflate(R.menu.menu_scrolling, menu)
     return true
-  }
-
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    val id = item.itemId
-    if (id == R.id.action_settings) {
-      val itemsList = fetchItem()
-      for(item in itemsList ){
-        saveFileToDrive(item)
-      }
-      toast("Sincronização iniciada")
-      return true
-    }
-    return super.onOptionsItemSelected(item)
   }
 
   private fun saveLastItemVisited() {
@@ -234,15 +189,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
 
 
-  }
-
-  private fun restoreDriveId() {
-    var driveIdRestored: DriveId? = Paper.book("driveId").read(CATEGORY)
-    if (driveIdRestored == null) {
-      createFolderInDrive()
-    } else {
-      mFolderDriveId = driveIdRestored
-    }
   }
 
   private var audioFileName: String? = ""
@@ -340,13 +286,7 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
   private fun fetchItem(): ArrayList<String> = Paper.book(CATEGORY).read(ITEM)
 
   private fun reloadAdapter(){
-
     defineFilterByPosition(tabLayout.selectedTabPosition)
-
-//    adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fetchItem())
-//    listViewFiles.adapter = adapter
-
-//    return adapter as ArrayAdapter<String>
   }
 
   override fun onCreateContextMenu(
@@ -356,7 +296,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
     val allCategories = fetchItem()
     val info = menuInfo as AdapterView.AdapterContextMenuInfo
-//    val fileClicked = allCategories[info.position]
     val fileClicked = listViewFiles.getItemAtPosition(info.position).toString()
 
 
@@ -470,8 +409,8 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
   }
 
-  private fun fecthAbsolutePath() =  baseContext.getExternalFilesDir(null).absolutePath //Environment.getExternalStorageDirectory().getAbsolutePath()
-
+  //Environment.getExternalStorageDirectory().getAbsolutePath()
+  private fun fecthAbsolutePath() =  baseContext.getExternalFilesDir(null).absolutePath
 
   private fun getTimestamp(): String {
     val time = (System.currentTimeMillis() / 10).toString()
@@ -484,10 +423,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
       Log.v(TAG, "Permission: " + permissions[0] + " was " + grantResults[0])
     }
     }
-
-  override fun onConnectionSuspended(cause: Int) {
-    Log.i(TAG, "GoogleApiClient connection suspended")
-  }
 
   private var mBitmapToSave: Bitmap? = null
 
@@ -520,122 +455,6 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
   }
 
-  override fun onConnected(connectionHint: Bundle?) {
-    Log.i(TAG, "API client connected.")
-//    if (mBitmapToSave == null) {
-//      // This activity has no UI of its own. Just start the camera.
-//      startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-//          ItemActivity.REQUEST_CODE_CAPTURE_IMAGE)
-//      return
-//    }
-//    saveFileToDrive()
-  }
-
-  private var mGoogleApiClient: GoogleApiClient? = null
-
-  private fun saveFileToDrive(fileName: String) {
-    // Start by creating a new contents, and setting a callback.
-    Log.i(TAG, "Creating new contents.")
-    toast("Gravando Imagens")
-      val imageFile = File(getCompletePath(fileName))
-
-    Drive.DriveApi.newDriveContents(mGoogleApiClient)
-        .setResultCallback(ResultCallback<DriveApi.DriveContentsResult> { result ->
-
-          if (!result.status.isSuccess) {
-            Log.i(TAG, "Failed to create new contents.")
-            return@ResultCallback
-          }
-          Log.i(TAG, "New contents created.")
-          val outputStream = result.driveContents.outputStream
-
-          val fileByte = FileUtils.readFileToByteArray(imageFile)
-
-          try {
-            outputStream.write(fileByte)
-          } catch (e1: IOException) {
-            Log.i(TAG, "Unable to write file contents.")
-          }
-
-          val metadataChangeSet = MetadataChangeSet.Builder()
-              .setTitle(fileName).build()
-
-          Drive.DriveApi.getRootFolder(mGoogleApiClient!!)
-              .createFile(mGoogleApiClient!!, metadataChangeSet, result.driveContents)
-              .setResultCallback { toast("Gravado" + " - "+ imageFile ) }
-
-        })
-  }
-
-  private var mFolderDriveId: DriveId? = null
-
-  private fun saveFileInDriveRootFolder(image: Bitmap?) {
-//
-//    val saveInDriveFolder = {
-//      Drive.DriveApi.newDriveContents(mGoogleApiClient)
-//          .setResultCallback({ result ->
-//            val folder = mFolderDriveId!!.asDriveFolder();
-//            val outputStream = result.driveContents.outputStream
-//            val bitmapStream = ByteArrayOutputStream()
-//            image!!.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream)
-//            try {
-//              outputStream.write(bitmapStream.toByteArray())
-//            } catch (e1: IOException) {
-//              Log.i(TAG, "Unable to write file contents.")
-//            }
-//
-//            val metadataChangeSet = MetadataChangeSet.Builder()
-//                .setMimeType("image/jpeg").setTitle("Android Photo.jpg").build()
-//
-//            folder.createFile(mGoogleApiClient!!, metadataChangeSet, result.driveContents)
-//                .setResultCallback { toast("Gravado") }
-//          })
-//    }
-
-//  findFolderInDrive()
-
-  }
-
-  private fun findFolderInDrive() {
-    Drive.DriveApi.fetchDriveId(mGoogleApiClient, CATEGORY)
-        .setResultCallback {
-          if (!it.getStatus().isSuccess()) {
-            toast("Pasta não encontrada");
-            createFolderInDrive()
-          } else {
-          }
-        }
-  }
-
-  private fun createFolderInDrive() {
-    val changeSet = MetadataChangeSet.Builder()
-        .setTitle(CATEGORY).build()
-
-    Drive.DriveApi.getRootFolder(mGoogleApiClient).createFolder(
-        mGoogleApiClient, changeSet).setResultCallback {
-      toast("Pasta Criada")
-      Paper.book("driveId").write(CATEGORY, it.driveFolder.driveId)
-      mFolderDriveId = it.driveFolder.driveId
-    }
-  }
-
-
-  override fun onResume() {
-    super.onResume()
-    if (mGoogleApiClient == null) {
-      connectToGoogleDrive()
-    } else {
-      mGoogleApiClient!!.connect()
-    }
-  }
-
-  override fun onPause() {
-    if (mGoogleApiClient != null) {
-      mGoogleApiClient!!.disconnect()
-    }
-    super.onPause()
-  }
-
   private var imageFileName: String = ""
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -657,40 +476,10 @@ class ItemActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
     }
   }
 
-  override fun onConnectionFailed(result: ConnectionResult) {
-//    // Called whenever the API client fails to connect.
-//    Log.i(TAG, "GoogleApiClient connection failed: " + result.toString())
-//    if (!result.hasResolution()) {
-//      // show the localized error dialog.
-//      GoogleApiAvailability.getInstance().getErrorDialog(this, result.errorCode, 0).show()
-//      returnv3
-//    }
-//    // The failure has a resolution. Resolve it.
-//    // Called typically when the app is not yet authorized, and an
-//    // authorization
-//    // dialog is displayed to the user.
-//    try {
-//      result.startResolutionForResult(this, ItemActivity.REQUEST_CODE_RESOLUTION)
-//    } catch (e: IntentSender.SendIntentException) {
-//      Log.e(TAG, "Exception while starting resolution activity", e)
-//    }
-
-  }
-
   companion object {
     private val REQUEST_CODE_CAPTURE_IMAGE = 1
     private val REQUEST_CODE_CREATOR = 2
     private val REQUEST_CODE_RESOLUTION = 3
   }
 
-  private fun connectToGoogleDrive() {
-    mGoogleApiClient = GoogleApiClient.Builder(this)
-        .addApi(Drive.API)
-        .addScope(Drive.SCOPE_FILE)
-        .addConnectionCallbacks(this)
-        .addOnConnectionFailedListener(this)
-        .build()
-
-    mGoogleApiClient!!.connect()
-  }
 }

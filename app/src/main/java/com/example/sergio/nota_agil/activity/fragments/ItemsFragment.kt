@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Toast
 import com.example.sergio.nota_agil.R
 import com.example.sergio.nota_agil.activity.activities.ItemActivity
 import io.paperdb.Paper
@@ -61,7 +62,16 @@ class ItemsFragment : Fragment() {
         .setView(input)
         .setTitle("Criar novo Item")
         .setPositiveButton("OK") { _, _ ->
-          Paper.book(CATEGORY).write(input.text.toString(), ArrayList<String>())
+
+          val newName = input.text.toString()
+          val arrayListTemp = Paper.book(CATEGORY).allKeys;
+
+          if (arrayListTemp.contains(newName) || newName.isEmpty()) {
+            Toast.makeText(getActivity(), "Nome de item inválido.",Toast.LENGTH_SHORT).show()
+            return@setPositiveButton
+          }
+
+          Paper.book(CATEGORY).write(newName , ArrayList<String>())
           reloadAdapter()
         }.show();
   }
@@ -110,7 +120,7 @@ class ItemsFragment : Fragment() {
             val arrayListTemp = Paper.book(CATEGORY).read<ArrayList<String>>(itemClicked)
 
             if (arrayListTemp.contains(newName) || newName.isEmpty()) {
-              toast("Nome de item inválido.")
+              Toast.makeText(getActivity(), "Nome de item inválido.",Toast.LENGTH_SHORT).show()
               return@setPositiveButton
             }
 

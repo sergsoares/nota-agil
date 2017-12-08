@@ -49,41 +49,6 @@
         android:id="@+id/layout_content"
         layout="@layout/content_scrolling"/>
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:orientation="vertical"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:layout_anchor="@id/app_bar"-->
-        <!--android:layout_marginLeft="60dp"-->
-        <!--android:layout_marginTop="60dp"-->
-        <!--app:layout_anchorGravity="center_vertical">-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/text_view_item_status"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:text="10 Total de Itens "-->
-            <!--android:textColor="#FFF"-->
-            <!--android:textSize="14sp"-->
-            <!--/>-->
-
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:text="10 Total de Aúdios "-->
-            <!--android:textColor="#FFF"-->
-            <!--android:textSize="14sp"-->
-            <!--/>-->
-
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:text="10 Total de Imagens"-->
-            <!--android:textColor="#FFF"-->
-            <!--android:textSize="14sp"-->
-            <!--/>-->
-    <!--</LinearLayout>-->
-
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/floatingMenu"
         android:layout_width="match_parent"

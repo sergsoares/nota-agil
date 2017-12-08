@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/side_nav_bar">
+
+    <ImageView
+        android:id="@+id/imageView_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        app:srcCompat="@mipmap/diamond_128"
+        android:layout_marginTop="113dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:text="Nota Ágil"
+        android:textSize="24dp"
+        android:textColor="#fff"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/imageView_home"
+        android:layout_alignLeft="@+id/imageView_home"
+        android:layout_alignStart="@+id/imageView_home"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_alignRight="@+id/imageView_home"
+        android:layout_alignEnd="@+id/imageView_home" />
+</RelativeLayout>
